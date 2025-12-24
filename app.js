@@ -842,9 +842,9 @@ app.get("/dashboard", isAuthenticated, async (req, res) => {
 
     /* --- LOCATION --- */
     if (location) {
-      const loc = location.toLowerCase();
+      const loc = location;
       filteredListings = filteredListings.filter((list) =>
-        (list.location || "").toLowerCase().includes(loc)
+        (list.location || "")includes(loc)
       );
     }
 
