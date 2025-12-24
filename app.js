@@ -213,7 +213,7 @@ function calculateRating(adCount) {
 app.get('/fashion' , isAuthenticated , async(req,res) => {
   const user = await User.findById(req.session.userId);
   res.render('fashion' ,{
-        country: user.country.toLowerCase(),
+        country: user.country,
     user
   });
 })
@@ -248,7 +248,7 @@ app.get('/free' , isAuthenticated , async(req,res) => {
 app.get('/houses'  ,isAuthenticated , async(req,res) => {
   const user = await User.findById(req.session.userId)  ;
   res.render('sell' ,{
-        country: user.country.toLowerCase(),
+        country: user.country,
     user
   })
 })
@@ -331,7 +331,7 @@ app.get('/property/:category/:id', isAuthenticated , async (req, res) => {
 app.get('/furnitures' , isAuthenticated , async(req,res) => {
   const user = await User.findById(req.session.userId) 
   res.render('furniture',{
-        country: user.country.toLowerCase(),
+        country: user.country
     user
   });
 })
@@ -345,7 +345,7 @@ app.get('/vehicle/:id' , isAuthenticated , async(req,res)  => {
 app.get('/appliances' , isAuthenticated ,async (req,res) => {
   const user  =await User.findById(req.session.userId);
   res.render('appliance' ,{ 
-        country: user.country.toLowerCase(),
+        country: user.country,
     user
   });
 })
