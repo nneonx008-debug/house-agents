@@ -1,7 +1,9 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 const Freinds = require('./models/freinds');
 const path = require('path');
 const fs = require('fs');
