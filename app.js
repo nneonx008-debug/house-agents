@@ -331,7 +331,7 @@ app.get('/property/:category/:id', isAuthenticated , async (req, res) => {
 app.get('/furnitures' , isAuthenticated , async(req,res) => {
   const user = await User.findById(req.session.userId) 
   res.render('furniture',{
-        country: user.country
+        country: user.country,
     user
   });
 })
