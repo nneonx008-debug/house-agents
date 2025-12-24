@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Friends - NeonX</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+
+
+
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo img {
+            width: 30%;
+            margin-bottom: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav a {
+            padding: 0.7rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .user-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+
+
+        .user-box img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+
+
+
+
+        @media(max-width: 768px) {
+            .main {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .topbar {
+                left: 0;
+                padding: 0 15px;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+    <style>
+        /* ============ RESET ============ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            background: #f9fafb;
+            color: #111;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ============ SIDEBAR ============ */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #e5e7eb;
+            padding: 1.2rem;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.hide {
+            transform: translateX(-260px);
+        }
+
+        .nav a {
+            display: block;
+            padding: .75rem 1rem;
+            border-radius: .5rem;
+            margin-bottom: .4rem;
+            font-weight: 500;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .user-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: .75rem;
+            text-align: center;
+        }
+
+        .user-box img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            margin-bottom: .4rem;
+        }
+
+        /* ============ TOPBAR ============ */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            height: 65px;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.2rem;
+            z-index: 150;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 22px;
+            height: 3px;
+            background: #fff;
+            border-radius: 3px;
+        }
+
+        /* ============ MAIN ============ */
+        .main {
+            margin-left: 250px;
+            padding-top: 80px;
+            height: 100vh;
+            overflow-y: auto;
+            padding-left: 1.2rem;
+            padding-right: 1.2rem;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* ============ SEARCH ============ */
+        .search-box {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 200px;
+            padding: .65rem .8rem;
+            border-radius: .6rem;
+            border: none;
+            background: #f1f5f9;
+            outline: none;
+        }
+
+        .search-btn {
+            padding: .65rem 1.2rem;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: .6rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ============ FRIEND CARDS ============ */
+        .friends-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .friend-card {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: .6rem;
+        }
+
+        .friend-email {
+            font-weight: 600;
+            font-size: .95rem;
+            word-break: break-all;
+        }
+
+        .friend-action a {
+            color: #2563eb;
+            font-weight: 600;
+            font-size: .9rem;
+        }
+
+        /* ============ OVERLAY ============ */
+        #overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .4);
+            z-index: 180;
+            display: none;
+        }
+
+        #overlay.show {
+            display: block;
+        }
+
+        /* ============ MOBILE ============ */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .sidebar {
+                transform: translateX(-260px);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .topbar {
+                left: 0;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div>
+            <img src="/NeonX Logo on Dark Backdrop.png" width="120">
+            <nav class="nav">
+                <a href="/dashboard">Homepage</a>
+                <a href="/profile">Dashboard</a>
+                <a href="/sell">Add Listing</a>
+                <a href="/inbox">Messages</a>
+                <a href="/user">Profile</a>
+                <a href="/freinds" class="active">My Friends</a>
+                <a href="/saved">Saved Ads</a>
+                <a href="/logout">Logout</a>
+            </nav>
+        </div>
+
+        <style>
+            .profile-avatar {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: #fff;
+                margin: 0 auto 0.5rem;
+                user-select: none;
+            }
+        </style>
+
+        <div class="user-box">
+            <div class="profile-avatar" data-name="<%= user.username %>">
+                <%= user.username.charAt(0).toUpperCase() %>
+            </div>
+            <strong>
+                <%= user.username %>
+            </strong>
+            <small>Premium Seller</small>
+        </div>
+
+    </aside>
+
+    <div id="overlay"></div>
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+        <h3>My Friends</h3>
+        <a href="/find-freind"><strong>Refresh</strong></a>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+        <style>
+            /* ================= STICKY CHIP BAR ================= */
+            /* ================= STICKY CHIP BAR ================= */
+            .chip-wrapper {
+                position: fixed;
+                top: 65px;
+                /* below topbar */
+                left: 20%;
+                right: 0;
+                z-index: 150;
+                background: #f9fafb;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            /* Horizontal swipe container */
+            .chip-bar {
+                display: flex;
+                gap: 10px;
+                padding: 10px 12px;
+
+                overflow-x: auto;
+                overflow-y: hidden;
+
+                -webkit-overflow-scrolling: touch;
+                /* ✅ iOS smooth swipe */
+                scroll-behavior: smooth;
+
+                white-space: nowrap;
+            }
+
+            /* Hide scrollbar */
+            .chip-bar::-webkit-scrollbar {
+                display: none;
+            }
+
+            .chip {
+                flex: 0 0 auto;
+                /* 🔥 VERY IMPORTANT */
+                padding: 8px 14px;
+                border-radius: 999px;
+                border: 1px solid #d1d5db;
+                background: #fff;
+                cursor: pointer;
+                white-space: nowrap;
+                transition: transform 0.15s ease, background 0.2s ease;
+            }
+
+            /* Tap feedback */
+            .chip:active {
+                transform: scale(0.95);
+            }
+
+            .chip.active {
+                background: #2563eb;
+                color: #fff;
+                border-color: #2563eb;
+            }
+
+            @media (max-width: 768px) {
+                .chip-wrapper {
+                    position: fixed;
+                    left: 0%;
+                }
+
+                .chip-bar {
+                    padding-bottom: 14px;
+                }
+            }
+
+            /* ===== SEARCH SUGGESTIONS (DESKTOP DEFAULT) ===== */
+            .friend-suggestions {
+                position: absolute;
+                top: 110%;
+                left: 0;
+                width: 100%;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+                max-height: 260px;
+                overflow-y: auto;
+                display: none;
+                z-index: 30000;
+            }
+
+            .friend-suggestions div {
+                padding: 12px 14px;
+                cursor: pointer;
+                font-size: 0.95rem;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            .friend-suggestions div:last-child {
+                border-bottom: none;
+            }
+
+            .friend-suggestions div:hover {
+                background: #2563eb;
+                color: #fff;
+            }
+
+            /* ===== 📱 MOBILE FULL-WIDTH MODE ===== */
+            @media (max-width: 768px) {
+                .friend-suggestions {
+                    position: fixed;
+                    top: 130px;
+                    /* below topbar + chip bar */
+                    left: 0;
+                    right: 0;
+                    width: 100vw;
+                    max-height: calc(100vh - 140px);
+                    border-radius: 16px 16px 0 0;
+                    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18);
+                    padding-bottom: env(safe-area-inset-bottom);
+                }
+
+                .friend-suggestions div {
+                    padding: 16px 18px;
+                    /* 👆 finger-friendly */
+                    font-size: 1rem;
+                }
+            }
+        </style>
+        <div class="chip-wrapper">
+            <div class="chip-bar">
+                <button onclick="goBack()" class="chip active">←</button>
+                <form method="GET" action="/search">
+
+                    <div style="position: relative; width: 100%;">
+                        <input type="text" id="friendSearchInput" class="chip" placeholder="🔎 Find Users..."
+                            autocomplete="off">
+                        <div id="friendSuggestions" class="friend-suggestions"></div>
+                    </div>
+                </form>
+
+                <button class="chip" data-transmission="new"><a href="/best-sellers">Find Sellers</a></button>
+                <button class="chip" data-transmission="refurbished"><a href="/best-buyers">Find Buyers</a></button>
+                <button class="chip" data-transmission="used"><a href="/popular">Find Popular people</a></button>
+
+
+            </div>
+
+        </div>
+        <script>
+            const chipBar = document.querySelector(".chip-bar");
+
+            chips.forEach(chip => {
+                chip.addEventListener("click", () => {
+                    chip.scrollIntoView({
+                        behavior: "smooth",
+                        inline: "center",
+                        block: "nearest"
+                    });
+                });
+            });
+        </script>
+
+
+        <% if (freinds.length===0) { %>
+            <div class="freind-card">
+
+
+            </div>
+            <% } %>
+                <br>
+                <br>
+                <br>
+                <div class="friends-list">
+                    <% freinds.forEach(f=> { %>
+                        <% if(user.country==f.country){%>
+                            <style>
+                                .friend-card {
+                                    background: #fff;
+                                    border-radius: 1rem;
+                                    padding: 1rem;
+                                    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+                                    transition: transform 0.25s ease, box-shadow 0.25s ease;
+                                }
+
+                                .friend-card:hover {
+                                    transform: translateY(-4px);
+                                    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+                                }
+
+                                .friend-meta {
+                                    font-size: .85rem;
+                                    color: #6b7280;
+                                    margin-top: 4px;
+                                }
+
+                                .friend-badge {
+                                    display: inline-block;
+                                    margin-top: 6px;
+                                    padding: 4px 10px;
+                                    border-radius: 999px;
+                                    font-size: .75rem;
+                                    font-weight: 600;
+                                    background: #e0e7ff;
+                                    color: #2563eb;
+                                }
+                            </style>
+                            <a href="/seller/<%= f.email %>/<%= f._id %>/listings">
+                                <div class="user-box">
+                                    <div class="profile-avatar" data-name="<%= f.username %>">
+                                        <%= f.username.charAt(0).toUpperCase() %>
+                                    </div>
+
+                                    <strong>
+                                        <%= f.username %>
+                                    </strong>
+
+                                    <div class="friend-meta">
+                                        <%= f.country %>, <%= f.state %>
+                                    </div>
+
+                                    <span class="friend-badge">
+                                        <% if(f.adCount> 4){ %>
+                                            Seller
+                                            <% } else { %>
+                                                Buyer
+                                                <% } %>
+                                    </span>
+
+                                    <div class="friend-meta">
+                                        👥 <%= f.frenzy %> friends
+                                    </div>
+                                </div>
+
+                            </a>
+                            <%}%>
+                                <% }) %>
+                </div>
+    </main>
+    <script>
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "index.html"; // fallback page
+            }
+        }
+    </script>
+    <script>
+        function getAvatarColor(name) {
+            const colors = [
+                "#1a73e8", "#34a853", "#fbbc05", "#ea4335",
+                "#9334e6", "#f06292", "#00acc1", "#5c6bc0"
+            ];
+
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) {
+                hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            }
+
+            return colors[Math.abs(hash) % colors.length];
+        }
+
+        document.querySelectorAll(".profile-avatar").forEach(el => {
+            const name = el.dataset.name || "U";
+            el.style.backgroundColor = getAvatarColor(name);
+        });
+    </script>
+    <!-- JS -->
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const hamburger = document.getElementById("hamburger");
+
+        hamburger.onclick = () => {
+            sidebar.classList.toggle("show");
+            overlay.classList.toggle("show");
+        };
+
+        overlay.onclick = () => {
+            sidebar.classList.remove("show");
+            overlay.classList.remove("show");
+        };
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const input = document.getElementById("friendSearchInput");
+            const box = document.getElementById("friendSuggestions");
+
+            if (!input || !box) return;
+
+            const cards = document.querySelectorAll(".friends-list .user-box");
+            let POOL = [];
+
+            // Build suggestion pool from rendered friends
+            cards.forEach(card => {
+                const name = card.querySelector("strong")?.textContent.trim();
+                const meta = card.querySelector(".friend-meta")?.textContent.trim();
+
+                if (name) POOL.push(name);
+                if (meta) {
+                    meta.split(",").forEach(p => {
+                        const t = p.trim();
+                        if (t) POOL.push(t);
+                    });
+                }
+            });
+
+            POOL = [...new Set(POOL)];
+            function renderSuggestions(list) {
+                box.innerHTML = "";
+                if (!list.length) {
+                    box.style.display = "none";
+                    lockScroll(false);
+                    return;
+                }
+
+                list.slice(0, 8).forEach(text => {
+                    const div = document.createElement("div");
+                    div.textContent = text;
+                    div.onclick = () => {
+                        input.value = text;
+                        box.style.display = "none";
+                        lockScroll(false);
+                        filterFriends(text);
+                    };
+                    box.appendChild(div);
+                });
+
+                box.style.display = "block";
+                lockScroll(true);
+            }
+
+            function lockScroll(lock) {
+                if (window.innerWidth <= 768) {
+                    document.body.style.overflow = lock ? "hidden" : "";
+                }
+            }
+
+            function filterFriends(query) {
+                const q = query.toLowerCase();
+                cards.forEach(card => {
+                    const content = card.textContent.toLowerCase();
+                    card.parentElement.style.display =
+                        content.includes(q) ? "block" : "none";
+                });
+            }
+
+            input.addEventListener("input", () => {
+                const q = input.value.trim().toLowerCase();
+                if (q.length < 2) {
+                    box.style.display = "none";
+                    filterFriends("");
+                    return;
+                }
+
+                const matches = POOL.filter(p =>
+                    p.toLowerCase().includes(q)
+                );
+
+                renderSuggestions(matches);
+                filterFriends(q);
+            });
+
+            input.addEventListener("focus", () => {
+                if (input.value.length >= 2) {
+                    renderSuggestions(
+                        POOL.filter(p =>
+                            p.toLowerCase().includes(input.value.toLowerCase())
+                        )
+                    );
+                }
+            });
+
+            document.addEventListener("click", e => {
+                if (!e.target.closest("#friendSearchInput") &&
+                    !e.target.closest("#friendSuggestions")) {
+                    box.style.display = "none";
+                    lockScroll(false);
+                }
+            });
+
+        });
+    </script>
+
+
+</body>
+
+</html>

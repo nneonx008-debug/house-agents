@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= seller.username %> - Listings | NeonX
+    </title>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f9fafb;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.2rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 200;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar.mobile-hidden {
+            left: -260px;
+        }
+
+        .sidebar .logo img {
+            width: 30%;
+            margin-bottom: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav a {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #444;
+            transition: 0.3s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .user-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+        .user-box img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Topbar */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            height: 65px;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            z-index: 150;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 22px;
+            height: 3px;
+            background: #fff;
+            border-radius: 3px;
+        }
+
+        /* Main Content */
+        .main {
+            margin-left: 250px;
+            flex: 1;
+            overflow-y: auto;
+            padding: 90px 2rem 2rem;
+            background: #f4f4f4;
+        }
+
+        header {
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: #111;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        header h1 img {
+            border-radius: 50%;
+        }
+
+        header p {
+            color: #555;
+            margin-top: .3rem;
+        }
+
+        /* Listings grid */
+        .listings {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: .3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 1rem;
+        }
+
+        .card-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: .5rem;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .card-content .price {
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: .3rem;
+        }
+
+        .card-content .location {
+            font-size: .85rem;
+            color: #555;
+        }
+
+        /* Overlay */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 180;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        #overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media(max-width:768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .sidebar {
+                left: -260px;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .topbar {
+                left: 0;
+                padding: 0 15px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 90px 1rem 1rem;
+            }
+        }
+
+        /* ===== FLOATING SELLER ACTIONS ===== */
+        .seller-actions {
+            position: fixed;
+            bottom: 22px;
+            right: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+        }
+
+        /* Button */
+        .action-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: #fff;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            transition: all 0.25s ease;
+        }
+
+        /* Hover / Tap */
+        .action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+        }
+
+        /* Individual colors */
+        .action-btn.chat {
+            background: #22c55e;
+            /* green */
+        }
+
+        .action-btn.add {
+            background: #2563eb;
+            /* blue */
+        }
+
+        .action-btn.mail {
+            background: #f59e0b;
+            /* amber */
+        }
+
+        /* Mobile size */
+        @media (max-width: 768px) {
+            .action-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+
+        /* ===== MOBILE CHAT BAR ===== */
+        .mobile-chat-bar {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-chat-bar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #fff;
+                padding: 12px;
+                border-top: 1px solid #e5e7eb;
+                z-index: 9999;
+            }
+
+            .mobile-chat-btn {
+                display: block;
+                width: 100%;
+                background: #22c55e;
+                color: #fff;
+                text-align: center;
+                padding: 14px;
+                border-radius: 14px;
+                font-size: 1rem;
+                font-weight: 700;
+            }
+        }
+    </style>
+</head>
+<!-- FLOATING SELLER ACTIONS -->
+
+<body>
+    <% let isFriend=false; frenzy.forEach(f=> {
+        if (f.email === seller.email) isFriend = true;
+        });
+        %>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div>
+                <div class="logo">
+                    <img src="/NeonX Logo on Dark Backdrop.png" alt="NeonX Logo">
+                </div>
+                <nav class="nav">
+                    <a href="/dashboard" class="active">Homepage</a>
+                    <a href="/profile">Dashboard</a>
+                    <a href="/sell">Add Listing</a>
+                    <a href="/inbox">Messages</a>
+                    <a href="/user">Profile</a>
+                    <a href="/freinds">My Friends</a>
+                    <a href="/saved">Saved Ads</a>
+                    <a href="/logout" onclick="return confirm('Are you sure you want to log out?')">Logout</a>
+                </nav>
+            </div>
+            <style>
+                .profile-avatar {
+                    width: 56px;
+                    height: 56px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 1.4rem;
+                    font-weight: 600;
+                    color: #fff;
+                    margin: 0 auto 0.5rem;
+                    user-select: none;
+                }
+            </style>
+            <div class="user-box">
+                <div class="profile-avatar" data-name="<%= user.username %>">
+                    <%= user.username.charAt(0).toUpperCase() %>
+                </div>
+                <strong>
+                    <%= user.username %>
+                </strong>
+                <small>Premium Seller</small>
+            </div>
+            <script>
+                function getAvatarColor(name) {
+                    const colors = [
+                        "#1a73e8", // Google blue
+                        "#34a853", // Google green
+                        "#fbbc05", // Google yellow
+                        "#ea4335", // Google red
+                        "#9334e6", // purple
+                        "#f06292", // pink
+                        "#00acc1", // cyan
+                        "#5c6bc0"  // indigo
+                    ];
+
+                    let hash = 0;
+                    for (let i = 0; i < name.length; i++) {
+                        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                    }
+
+                    return colors[Math.abs(hash) % colors.length];
+                }
+
+                document.querySelectorAll(".profile-avatar").forEach(el => {
+                    const name = el.dataset.name || "U";
+                    el.style.backgroundColor = getAvatarColor(name);
+                });
+            </script>
+        </aside>
+
+        <!-- Overlay -->
+        <div id="overlay"></div>
+        <style>
+            .chip-wrapper {
+                position: fixed;
+                top: 65px;
+                /* below topbar */
+                left: 20%;
+                right: 0;
+                z-index: 150;
+                background: #f9fafb;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            /* Horizontal swipe container */
+            .chip-bar {
+                display: flex;
+                gap: 10px;
+                padding: 10px 12px;
+
+                overflow-x: auto;
+                overflow-y: hidden;
+
+                -webkit-overflow-scrolling: touch;
+                /* ✅ iOS smooth swipe */
+                scroll-behavior: smooth;
+
+                white-space: nowrap;
+            }
+
+            /* Hide scrollbar */
+            .chip-bar::-webkit-scrollbar {
+                display: none;
+            }
+
+            .chip {
+                flex: 0 0 auto;
+                /* 🔥 VERY IMPORTANT */
+                padding: 8px 14px;
+                border-radius: 999px;
+                border: 1px solid #d1d5db;
+                background: #fff;
+                cursor: pointer;
+                white-space: nowrap;
+                transition: transform 0.15s ease, background 0.2s ease;
+            }
+
+            /* Tap feedback */
+            .chip:active {
+                transform: scale(0.95);
+            }
+
+            .chip.active {
+                background: #2563eb;
+                color: #fff;
+                border-color: #2563eb;
+            }
+
+            @media (max-width: 768px) {
+                .chip-wrapper {
+                    position: fixed;
+                    left: 0%;
+                }
+
+                .chip-bar {
+                    padding-bottom: 14px;
+                }
+            }
+
+            /* ===== SELLER CTA ===== */
+            .seller-cta {
+                display: flex;
+                gap: 12px;
+                justify-content: center;
+                margin-top: 16px;
+                flex-wrap: wrap;
+            }
+
+            .cta-btn {
+                padding: 12px 18px;
+                border-radius: 14px;
+                font-size: 0.95rem;
+                font-weight: 600;
+                border: none;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                text-align: center;
+                min-width: 140px;
+            }
+
+            /* Primary */
+            .cta-btn.primary {
+                background: #2563eb;
+                color: #fff;
+            }
+
+            .cta-btn.primary:hover {
+                background: #1e4ed8;
+            }
+
+            /* Ghost / secondary */
+            .cta-btn.ghost {
+                background: #f1f5f9;
+                color: #475569;
+            }
+
+            /* Disabled */
+            .cta-btn.disabled {
+                background: #e5e7eb;
+                color: #9ca3af;
+                cursor: not-allowed;
+            }
+        </style>
+
+        <!-- Topbar -->
+        <div class="topbar">
+            <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+            <h2>Seller Listings</h2>
+
+        </div>
+
+        <!-- Main -->
+        <main class="main">
+            <div class="chip-wrapper">
+                <div class="chip-bar">
+                    <button onclick="goBack()" class="chip active">←</button>
+
+                </div>
+
+            </div>
+            <script>
+                function goBack() {
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.location.href = "index.html"; // fallback page
+                    }
+                }
+            </script>
+            <header>
+                <style>
+                    .profile-avatar {
+                        width: 56px;
+                        height: 56px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 1.4rem;
+                        font-weight: 600;
+                        color: #fff;
+                        margin: 0 auto 0.5rem;
+                        user-select: none;
+                    }
+                </style>
+                <br>
+                <br>
+                <div class="user-box">
+                    <div class="profile-avatar" data-name="<%= seller.username %>">
+                        <%= seller.username.charAt(0).toUpperCase() %>
+                    </div>
+                    <strong>
+                        <%= seller.username %>
+                    </strong>
+                    <small>
+                        <%=seller.email%>
+                    </small><br>
+                    <% if(seller.rating==0){ %>
+                        ☆☆☆☆☆
+                        <% } %>
+                            <% if(seller.rating==1){ %>⭐☆☆☆☆<% } %>
+                                    <% if(seller.rating==2){ %>⭐⭐☆☆☆<% } %>
+                                            <% if(seller.rating==3){ %>⭐⭐⭐☆☆<% } %>
+                                                    <% if(seller.rating==4){ %>⭐⭐⭐⭐☆<% } %>
+
+                                                            <% if(seller.rating==5){ %>⭐⭐⭐⭐⭐<% } %>
+                                                                    <p>
+                                                                        <%=seller.frenzy%> freinds
+                                                                    </p>
+                                                                    <br><strong>you can go to My Freinds tab to chat
+                                                                        with this person if added as a freind</strong>
+                                                                    <p>
+                                                                        <style>
+                                                                            .btn {
+                                                                                padding: 12px;
+
+                                                                                font-weight: 600;
+                                                                                font-size: 1rem;
+                                                                                margin: 0px 20px;
+                                                                                text-transform: capitalize;
+                                                                                text-align: center;
+                                                                                transition: 0.3s;
+                                                                                border-radius: 15px;
+                                                                                cursor: pointer;
+                                                                            }
+
+                                                                            .btn-primary {
+                                                                                background: #0453ff5b;
+                                                                                color: #fff;
+                                                                            }
+
+                                                                            .btn-primary:hover {
+                                                                                background: #1d4fd8b9;
+                                                                            }
+                                                                        </style>
+                                                                        <br>
+                                                                    </p>
+
+                                                                    <br>
+
+                                                                    <% frenzy.forEach(f=>{%>
+                                                                        <% if(f.email==email){%>
+
+                                                                            <style>
+                                                                                .btn-primary {
+                                                                                    display: none;
+                                                                                }
+                                                                            </style>
+                                                                            <%}%>
+                                                                                <%}) %>
+                                                                                    <style>
+                                                                                        .already {
+                                                                                            background-color: #78849f3f;
+                                                                                            border-radius: 15px;
+                                                                                            color: grey;
+                                                                                        }
+
+                                                                                        .already:hover {
+                                                                                            background-color: #78849f3f;
+                                                                                        }
+                                                                                    </style>
+
+                                                                                    <div class="seller-cta">
+                                                                                        <% if
+                                                                                            (user.username===seller.username)
+                                                                                            { %>
+                                                                                            <button
+                                                                                                class="cta-btn disabled">Your
+                                                                                                Profile</button>
+
+                                                                                            <% } else if (isFriend) { %>
+                                                                                                <a href="/chat/<%= seller._id %>"
+                                                                                                    class="cta-btn primary">💬
+                                                                                                    Chat</a>
+                                                                                                <button
+                                                                                                    class="cta-btn ghost">✓
+                                                                                                    Friends</button>
+
+                                                                                                <% } else { %>
+                                                                                                    <a href="/freinds/<%= seller.email %>/<%= seller._id %>/<%= user.username %>"
+                                                                                                        class="cta-btn primary">
+                                                                                                        ➕ Add User to
+                                                                                                        Chat
+                                                                                                    </a>
+                                                                                                    <button
+                                                                                                        class="cta-btn ghost">Chat
+                                                                                                        locked</button>
+                                                                                                    <% } %>
+                                                                                                        <% if
+                                                                                                            (user.username
+                                                                                                            !==seller.username
+                                                                                                            ) { %>
+                                                                                                            <div
+                                                                                                                class="mobile-chat-bar">
+                                                                                                                <a href="/chat/<%= seller._id %>"
+                                                                                                                    class="mobile-chat-btn">
+                                                                                                                    💬
+                                                                                                                    Chat
+                                                                                                                    with
+                                                                                                                    <%= seller.username
+                                                                                                                        %>
+                                                                                                                </a>
+                                                                                                            </div>
+                                                                                                            <% } %>
+
+                                                                                    </div>
+
+
+
+                </div>
+                <script>
+                    function getAvatarColor(name) {
+                        const colors = [
+                            "#1a73e8", // Google blue
+                            "#34a853", // Google green
+                            "#fbbc05", // Google yellow
+                            "#ea4335", // Google red
+                            "#9334e6", // purple
+                            "#f06292", // pink
+                            "#00acc1", // cyan
+                            "#5c6bc0"  // indigo
+                        ];
+
+                        let hash = 0;
+                        for (let i = 0; i < name.length; i++) {
+                            hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                        }
+
+                        return colors[Math.abs(hash) % colors.length];
+                    }
+
+                    document.querySelectorAll(".profile-avatar").forEach(el => {
+                        const name = el.dataset.name || "U";
+                        el.style.backgroundColor = getAvatarColor(name);
+                    });
+                </script>
+
+
+
+            </header>
+
+            <div class="listings" id="listingContainer">
+                <% listings.forEach(list=> { %>
+                    <%if( list.country==user.country){%>
+                        <div class="card" data-price="<%= list.price %>" <% if(list.transmission){ %>
+                            data-transmission="<%= list.transmission.toLowerCase() %>"
+                                <% } %>
+                                    <% if(list.condition){ %>
+                                        data-transmission="<%= list.condition.toLowerCase() %>"
+                                            <% } %>
+                                                <% if(list.beds){ %>
+                                                    data-transmission="<%= list.beds %>"
+                                                        <% } %>
+
+                                                            >
+
+
+
+                                                            <a href="/property/<%=list.category%>/<%= list._id %>">
+                                                                <div class="badge">
+                                                                </div>
+                                                                <img src="/<%= list.bgimg %>" alt="Listing Image">
+                                                                <div class="card-content">
+                                                                    <h3>
+                                                                        <%= list.title %>
+                                                                            <%if(list.category=='Houses' ){%>
+                                                                                ( <%=list.beds%> Rooms)
+                                                                                    <%}%>
+                                                                                        <%if(list.category=='Vehicle'
+                                                                                            ){%>
+                                                                                            (<%=list.transmission%> )
+                                                                                                <%}%>
+                                                                                                    <%if(list.category=='Fashion'
+                                                                                                        ){%>
+                                                                                                        (
+                                                                                                        <%=list.gender%>
+                                                                                                            Fashion)
+                                                                                                            <%}%>
+                                                                                                                <%if(list.category=='Appliances'
+                                                                                                                    ){%>
+                                                                                                                    (
+                                                                                                                    <%=list.condition%>
+                                                                                                                        )
+                                                                                                                        <%}%>
+                                                                                                                            <%if(list.category=='Devices'
+                                                                                                                                ){%>
+                                                                                                                                (
+                                                                                                                                <%=list.condition%>
+                                                                                                                                    )
+                                                                                                                                    <%}%>
+                                                                                                                                        <%if(list.category=='Furnitures'
+                                                                                                                                            ){%>
+                                                                                                                                            (
+                                                                                                                                            <%=list.condition%>
+                                                                                                                                                )
+                                                                                                                                                <%}%>
+                                                                    </h3>
+                                                                    <%if(list.country=='ghana' ){%>
+                                                                        <div class="price">₵
+                                                                            <%=Number(list.price).toLocaleString()%>
+                                                                        </div>
+                                                                        <%}%>
+                                                                            <%if(list.country=='nigeria' ){%>
+                                                                                <div class="price">₦
+                                                                                    <%=Number(list.price).toLocaleString()%>
+                                                                                </div>
+                                                                                <%}%>
+
+                                                                                    <div class="details">
+                                                                                        <%= list.location %>,
+                                                                                            <%=list.specific%>
+                                                                                    </div>
+                                                                </div>
+                                                            </a>
+                        </div>
+                        <%}%>
+                            <%if( list.country !=user.country){%>
+
+                                <%}%>
+
+                                    <% }) %>
+            </div>
+        </main>
+
+        <script>
+            const hamburger = document.getElementById("hamburger");
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("overlay");
+
+            hamburger.addEventListener("click", () => {
+                sidebar.classList.toggle("show");
+                overlay.classList.toggle("show");
+            });
+
+            overlay.addEventListener("click", () => {
+                sidebar.classList.remove("show");
+                overlay.classList.remove("show");
+            });
+        </script>
+
+
+</body>
+
+</html>

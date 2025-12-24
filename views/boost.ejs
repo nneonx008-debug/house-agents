@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeonX - Boost Listing</title>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f9fafb;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.2rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 200;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar.mobile-hidden {
+            left: -260px;
+        }
+
+        .sidebar .logo img {
+            width: 30%;
+            margin-bottom: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav a {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #444;
+            transition: 0.3s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .user-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+        .user-box img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Topbar */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            height: 65px;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            z-index: 150;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 22px;
+            height: 3px;
+            background: #fff;
+            border-radius: 3px;
+        }
+
+        /* Main */
+        .main {
+            margin-left: 250px;
+            padding: 90px 2rem 2rem;
+            flex: 1;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Boost Card */
+        .boost-card {
+            background: #fff;
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: popIn 0.7s ease;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .boost-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #2563eb;
+        }
+
+        .boost-card p {
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .boost-card ul {
+            text-align: left;
+            margin: 1rem 0;
+            padding-left: 1.2rem;
+            list-style: disc;
+        }
+
+        .boost-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.8rem 1.5rem;
+            background: #f59e0b;
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .boost-btn:hover {
+            background: #d97706;
+            transform: scale(1.05);
+        }
+
+        .why-boost {
+            background: #fef3c7;
+            border-left: 5px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 2rem;
+            font-size: 0.95rem;
+        }
+
+        /* Overlay */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 180;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        #overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsive */
+        @media(max-width:768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .sidebar {
+                left: -260px;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .topbar {
+                left: 0;
+                padding: 0 15px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 90px 1rem 1rem;
+            }
+
+            .boost-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div>
+            <div class="logo">
+                <img src="/NeonX Logo on Dark Backdrop.png" alt="NeonX Logo">
+            </div>
+            <nav class="nav">
+                <a href="/dashboard" class="active">Homepage</a>
+                <a href="/profile">Dashboard</a>
+                <a href="/sell">Add Listing</a>
+                <a href="/inbox">Messages</a>
+                <a href="/user">Profile</a>
+                <a href="/friends">My Friends</a>
+                <a href="/saved">Saved Ads</a>
+
+                <a href="/logout" onclick="return confirmLogout(event)">Logout</a>
+            </nav>
+        </div>
+        <div class="user-box">
+            <img src="/team.png" alt="User" />
+            <div><strong>
+                    <%= user.username %>
+                </strong></div>
+            <small>Premium Seller</small>
+        </div>
+    </aside>
+
+    <!-- Dark Overlay -->
+    <div id="overlay"></div>
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+        <h1>Boost Listing</h1>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="boost-card">
+            <h2>
+                <%= listing.title %>
+            </h2>
+            <p><strong>Price:</strong> ₦<%= listing.price %>
+            </p>
+            <p><strong>Location:</strong>
+                <%= listing.location %>
+            </p>
+
+            <form action="/boost/<%= listing.category %>/<%= listing._id %>/pay" method="POST">
+                <style>
+                    .boost-btn {
+                        display: inline-block;
+                        margin-top: 1rem;
+                        padding: 0.8rem 1.5rem;
+                        background: #f59e0b;
+                        color: #fff;
+                        font-weight: 600;
+                        border: none;
+                        border-radius: 0.6rem;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    }
+
+                    .boost-btn:hover {
+                        background: #d97706;
+                        transform: scale(1.05);
+                    }
+                </style>
+                <%if(user.country=='nigeria' ){%>
+                    <button type="submit" class="boost-btn">Pay ₦500 to Boost</button>
+
+                    <%}%>
+                        <%if(user.country=='ghana' ){%>
+                            <button type="submit" class="boost-btn">Pay ₵5 to Boost</button>
+
+                            <%}%>
+            </form>
+
+            <div class="why-boost">
+                <h3>Why Boost Your Listing?</h3>
+                <ul>
+                    <li>Get higher visibility and appear on top of search results.</li>
+                    <li>Reach more potential buyers instantly.</li>
+                    <li>Increase the chances of selling faster.</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function confirmLogout(e) {
+            if (!confirm("⚠️ Are you sure you want to log out?")) e.preventDefault();
+        }
+
+        // Sidebar toggle
+        const hamburger = document.getElementById("hamburger");
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+
+        hamburger.addEventListener("click", () => {
+            sidebar.classList.toggle("show");
+            overlay.classList.toggle("show");
+        });
+
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("show");
+            overlay.classList.remove("show");
+        });
+    </script>
+</body>
+
+</html>

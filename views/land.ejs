@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeonX - Discover & Sell Properties</title>
+    <link rel="manifest" href="/manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        .g {
+            background-color: #2563eb;
+            border: 2px solid white;
+            color: white;
+        }
+
+        .g:hover {
+            background-color: white;
+            color: #2563eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #f9fafb;
+            color: #333;
+            scroll-behavior: smooth;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: #2563eb;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        nav a {
+            margin-left: 25px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 100px 20px 60px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 30px;
+        }
+
+        .hero .btn {
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 5px;
+            transition: 0.3s;
+
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 60px 50px;
+            background: #fff;
+        }
+
+        .feature-card {
+            background: #f1f5f9;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            margin: 20px 0 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Screenshots */
+        .screenshots {
+            background: #f9fafb;
+            padding: 60px 50px;
+            text-align: center;
+        }
+
+        .screenshots h2 {
+            margin-bottom: 40px;
+        }
+
+        .screenshots img {
+            max-width: 200px;
+            margin: 0 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .screenshots img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Download Section */
+        .download {
+            padding: 60px 20px;
+            text-align: center;
+            background: #2563eb;
+            color: white;
+        }
+
+        .download h2 {
+            margin-bottom: 30px;
+        }
+
+
+        .download .btn {
+            margin: 10px;
+            padding: 10px 30px;
+
+            background: #ffdd57;
+            color: #333;
+        }
+
+        .download .btn:hover {
+            background: #fbbf24;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #1e40af;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+            }
+
+            nav {
+                margin-top: 10px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .d {
+            background: #ffdd57;
+            color: #333;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">NeonX</div>
+        <nav>
+            <a href="/features">Features</a>
+            <a href="/isLogging">Login</a>
+            <a href="/signup">Signin</a>
+        </nav>
+    </header>
+    <style>
+        .fx {
+            display: flex;
+        }
+    </style>
+    <section class="hero">
+        <h1>The Marketplace for You</h1>
+        <p>NeonX helps you explore properties, chat with sellers, and find the best deals – all in one platform.</p>
+        <div class="fx">
+
+            <a href="/isLogging" class="btn d">Get Started</a>
+
+            <button id="installBtn" style="display:none;" class="g btn">
+                Download App
+            </button>
+        </div>
+
+
+    </section>
+
+    <section class="features" id="features">
+        <div class="feature-card">
+            <a href="/neonx List 2.jpg" target="_blank">
+
+                <img src="/neonx List 2.jpg" alt="Feature 1" width="60">
+            </a>
+            <h3>Easy Listings</h3>
+            <p>Create and manage property listings effortlessly.</p>
+        </div>
+        <div class="feature-card">
+            <a href="/instant chat.jpg" target="_blank">
+                <img src="/instant chat.jpg" alt="Feature 2" width="60">
+            </a>
+            <h3>Instant Chat</h3>
+            <p>Connect with sellers or buyers instantly within the app.</p>
+        </div>
+        <div class="feature-card">
+            <a href="/price filter.jpg" target="_blank">
+                <img src="/price filter.jpg" alt="Feature 3" width="60">
+            </a>
+            <h3>Price Filter</h3>
+            <p>Find properties within your budget easily and fast.</p>
+        </div>
+    </section>
+
+    <section class="screenshots" id="screenshots">
+        <h2>App Screenshots</h2>
+        <a href="/app shots.jpg" target="_blank">
+            <img src="/app shots.jpg" alt="Screenshot 1">
+        </a>
+        <a href="/app shots 2.jpg" target="_blank">
+            <img src="/app shots 2.jpg" alt="Screenshot 2">
+        </a>
+        <a href="/app shots 3.jpg">
+            <img src="/app shots 3.jpg" alt="Screenshot 3">
+        </a>
+    </section>
+
+    <script>
+        let deferredPrompt;
+        const installBtn = document.getElementById("installBtn");
+
+        window.addEventListener("beforeinstallprompt", (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = "inline-block";
+            console.log("🔥 Install available");
+        });
+
+        installBtn.addEventListener("click", async () => {
+            if (!deferredPrompt) return;
+
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+
+            deferredPrompt = null;
+            installBtn.style.display = "none";
+        });
+
+        window.addEventListener("appinstalled", () => {
+            console.log("✅ App installed");
+        });
+    </script>
+
+
+</body>
+
+</html>

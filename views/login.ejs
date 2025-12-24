@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0f2fe, #f8fafc);
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            max-width: 420px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 32px;
+            border-radius: 16px;
+            color: #0f172a;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 22px;
+            color: #1e293b;
+        }
+
+        .step {
+            display: none;
+            animation: fade .35s ease;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        label {
+            display: block;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            outline: none;
+            background: #f8fafc;
+            color: #0f172a;
+            transition: border .2s, box-shadow .2s;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, .15);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 26px;
+        }
+
+        button {
+            padding: 11px 20px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            font-weight: 600;
+        }
+
+        button:hover {
+            opacity: .95;
+        }
+
+        button.secondary {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .progress {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 22px;
+        }
+
+        .bar {
+            flex: 1;
+            height: 7px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .bar.active {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        .redirect {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .redirect a {
+            color: #2563eb;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        @keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <style>
+        .email-wrapper {
+            position: relative;
+        }
+
+        /* ===== DESKTOP ===== */
+        .email-suggestions {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            max-height: 220px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+
+        .email-suggestions div {
+            padding: 12px 14px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.95rem;
+        }
+
+        .email-suggestions div:last-child {
+            border-bottom: none;
+        }
+
+        .email-suggestions div:hover {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .email-suggestions {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                top: auto;
+                width: 100%;
+                max-height: 45vh;
+                border-radius: 16px 16px 0 0;
+                box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.25);
+                padding-bottom: env(safe-area-inset-bottom);
+                animation: slideUp 0.25s ease;
+            }
+
+            .email-suggestions div {
+                padding: 18px 20px;
+                font-size: 1rem;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h2>Login</h2>
+        <form action="/login" method="POST">
+            <label>Email</label>
+            <div class="email-wrapper">
+                <input type="email" name="email" class="e" id="emailInput" autocomplete="off" required>
+                <div id="emailSuggestions" class="email-suggestions"></div>
+            </div>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+            <label>
+                <input type="checkbox" name="rememberMe" /> Remember Me
+            </label>
+            <button type="submit">Login</button>
+            <p class="redirect">Don't have an account? <a href="/signup">Sign Up</a></p>
+        </form>
+        <style>
+            .error {
+                color: red;
+            }
+        </style>
+        <% if (typeof error !=="undefined" ) { %>
+            <p class="error">
+                <%= error %>
+            </p>
+            <% } %>
+    </div>
+    <script>
+        const emailInput = document.querySelector(".e");
+        const box = document.getElementById("emailSuggestions");
+
+        let controller;
+
+        emailInput.addEventListener("input", async () => {
+            const q = emailInput.value.trim();
+
+            if (q.length < 2) {
+                box.style.display = "none";
+                return;
+            }
+
+            // cancel previous request
+            if (controller) controller.abort();
+            controller = new AbortController();
+
+            try {
+                const res = await fetch(`/email-suggestions?q=${encodeURIComponent(q)}`, {
+                    signal: controller.signal
+                });
+
+                const emails = await res.json();
+                renderSuggestions(emails);
+            } catch (err) {
+                console.log("Suggestion fetch cancelled");
+            }
+        });
+
+        function renderSuggestions(list) {
+            box.innerHTML = "";
+
+            if (!list.length) {
+                box.style.display = "none";
+                return;
+            }
+
+            list.forEach(email => {
+                const div = document.createElement("div");
+                div.textContent = email;
+                div.onclick = () => {
+                    emailInput.value = email;
+                    box.style.display = "none";
+                };
+                box.appendChild(div);
+            });
+
+            box.style.display = "block";
+        }
+
+        // Hide when clicking outside
+        document.addEventListener("click", e => {
+            if (!e.target.closest(".email-wrapper")) {
+                box.style.display = "none";
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

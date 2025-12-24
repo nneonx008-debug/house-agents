@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edsam Properties - Sell</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            background: #f9fafb;
+            height: 100vh;
+            color: #333;
+            overflow: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            color: #2563eb;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav a {
+            padding: .7rem 1rem;
+            border-radius: .5rem;
+            font-size: .95rem;
+            transition: .3s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .user-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: .75rem;
+            text-align: center;
+        }
+
+        .user-box img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: .5rem;
+        }
+
+        /* Main */
+        .main {
+            margin-left: 250px;
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: #111;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Sell Options */
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .options a {
+            background: #fff;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border-radius: 1rem;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .vip-spotlight {
+            background: linear-gradient(135deg, #facc15, #f97316);
+            color: #111;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            border-radius: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(250, 204, 21, 0.4);
+            animation: pulseGlow 3s infinite;
+        }
+
+        .vip-icon {
+            font-size: 2.5rem;
+            margin-bottom: .5rem;
+            animation: bounce 1.5s infinite;
+        }
+
+        .vip-spotlight h2 {
+            font-size: 1.6rem;
+            margin-bottom: .8rem;
+            font-weight: bold;
+        }
+
+        .vip-spotlight p {
+            font-size: 1.1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .credit-count {
+            font-weight: bold;
+            font-size: 1.3rem;
+            color: #1e293b;
+            background: #fff;
+            padding: 0.2rem 0.6rem;
+            border-radius: .4rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .vip-btn {
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 9999px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .vip-btn.buy {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .vip-btn.buy:hover {
+            background: #1e40af;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        .vip-btn.upgrade {
+            background: #fff;
+            color: #b45309;
+            font-weight: bold;
+        }
+
+        .vip-btn.upgrade:hover {
+            background: #fef3c7;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(180, 83, 9, 0.4);
+        }
+
+        /* Animations */
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 25px rgba(250, 204, 21, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 12px 35px rgba(250, 204, 21, 0.7);
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+
+        .options a:hover {
+            background: #2563eb;
+            color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive Sidebar */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                top: 0;
+                bottom: 0;
+                transition: left .3s ease;
+                z-index: 1000;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .menu-btn {
+                display: block;
+                background: #2563eb;
+                color: #fff;
+                padding: .5rem 1rem;
+                border: none;
+                border-radius: .5rem;
+                cursor: pointer;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .menu-btn {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div>
+            <div class="logo">Edsam Agents</div>
+            <nav class="nav">
+                <a href="/dashboard">Homepage</a>
+                <a href="/profile">Dashboard</a>
+                <a href="/sell" class="active">Add Listing</a>
+                <a href="/inbox">Messages</a>
+                <a href="/user">Profile</a>
+                <a href="/freinds">My freinds</a>
+                <a href="/saved">Saved Ads</a>
+                <a href="/logout" onclick="return confirmDelete(event)">Logout</a>
+            </nav>
+        </div>
+        <style>
+            .profile-avatar {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: #fff;
+                margin: 0 auto 0.5rem;
+                user-select: none;
+            }
+        </style>
+        <div class="user-box">
+            <div class="profile-avatar" data-name="<%= user.username %>">
+                <%= user.username.charAt(0).toUpperCase() %>
+            </div>
+            <strong>
+                <%= user.username %>
+            </strong>
+            <small>Premium Seller</small>
+        </div>
+        <script>
+            function getAvatarColor(name) {
+                const colors = [
+                    "#1a73e8", // Google blue
+                    "#34a853", // Google green
+                    "#fbbc05", // Google yellow
+                    "#ea4335", // Google red
+                    "#9334e6", // purple
+                    "#f06292", // pink
+                    "#00acc1", // cyan
+                    "#5c6bc0"  // indigo
+                ];
+
+                let hash = 0;
+                for (let i = 0; i < name.length; i++) {
+                    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                }
+
+                return colors[Math.abs(hash) % colors.length];
+            }
+
+            document.querySelectorAll(".profile-avatar").forEach(el => {
+                const name = el.dataset.name || "U";
+                el.style.backgroundColor = getAvatarColor(name);
+            });
+        </script>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+        <button class="menu-btn">☰ Menu</button>
+        <header>
+            <h1>What would you sell today?</h1>
+
+            <!-- VIP Spotlight -->
+            <div class="vip-spotlight">
+                <div class="vip-icon">⭐</div>
+                <h2>Exclusive VIP Post</h2>
+                <p>
+                    You have
+                    <span class="credit-count">
+                        <%= user.credit %>
+                    </span>
+                    VIP <%= user.credit===1 ? "Post" : "Posts" %> left.
+                </p>
+
+                <% if(user.credit> 0){ %>
+                    <form action="/pay/vip" method="GET">
+                        <button class="vip-btn buy">✨ Buy More Credits</button>
+                    </form>
+                    <% } else { %>
+                        <form action="/pay/vip" method="GET">
+                            <button class="vip-btn upgrade">🚀VIP Post Now!</button>
+                        </form>
+                        <% } %>
+            </div>
+
+
+        </header>
+
+        <div class="options">
+            <a href="/houses">🏠 Houses & Lands</a>
+            <a href="/vehicles">🚗 Vehicles</a>
+            <a href="/devices">📱 Electronics & Gadgets</a>
+            <a href="/furnitures">🛋️Home & Furnitures</a>
+            <a href="/appliances">💼 Services & Jobs</a>
+            <a href="/fashion">👗💄 Fashion, Clothes & Cosmetics</a>
+        </div>
+    </main>
+
+    <script>
+        const sidebar = document.querySelector('.sidebar');
+        const menuBtn = document.querySelector('.menu-btn');
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        function confirmLogout(event) {
+            if (!confirm("Are you sure you want to logout?")) {
+                event.preventDefault();
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+
+</html>

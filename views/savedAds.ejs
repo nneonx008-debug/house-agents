@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saved Ads - NeonX</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+
+
+
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo img {
+            width: 30%;
+            margin-bottom: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav a {
+            padding: 0.7rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .user-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+
+
+        .user-box img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+
+
+
+
+        @media(max-width: 768px) {
+            .main {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .topbar {
+                left: 0;
+                padding: 0 15px;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f9fafb;
+            color: #333;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.2rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 300;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar .logo img {
+            width: 30%;
+            margin-bottom: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav a {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #444;
+            transition: 0.3s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .user-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+        .user-box img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 250;
+            display: none;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Topbar */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            height: 65px;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 200;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 22px;
+            height: 3px;
+            background: #fff;
+            border-radius: 3px;
+        }
+
+        /* Main */
+        .main {
+            margin-left: 250px;
+            flex: 1;
+            overflow-y: auto;
+            padding: 90px 2rem 2rem;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all .3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 0.4rem;
+        }
+
+        .details {
+            font-size: 0.85rem;
+            color: #555;
+            text-transform: capitalize;
+        }
+
+        .empty-msg {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .sidebar {
+                left: -260px;
+            }
+
+            .sidebar.show {
+                left: 0;
+            }
+
+            .topbar {
+                left: 0;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 90px 1rem 1rem;
+            }
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #f9fafb;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        #loader img {
+            width: 120px;
+            margin-bottom: 15px;
+            animation: pulseLogo 1.5s infinite;
+        }
+
+        .loader-motto {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+
+        .loader-bar {
+            width: 220px;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .loader-progress {
+            width: 0%;
+            height: 100%;
+            background: #2563eb;
+            animation: loadProgress 1s forwards;
+        }
+
+        @keyframes loadProgress {
+            from {
+                width: 0%;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes pulseLogo {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .delete-form {
+            padding: 0.8rem 1rem;
+        }
+
+        .delete-btn {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            background: #ef4444;
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loader -->
+    <div id="loader">
+        <img src="/NeonX Logo on Dark Backdrop.png" alt="NeonX Logo">
+        <h2 class="loader-motto">Loading Saved Ads...</h2>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div>
+            <div class="logo">
+                <img src="/NeonX Logo on Dark Backdrop.png" alt="NeonX Logo">
+            </div>
+            <nav class="nav">
+                <a href="/dashboard">Homepage</a>
+                <a href="/profile">Dashboard</a>
+                <a href="/sell">Add Listing</a>
+                <a href="/inbox">Messages</a>
+                <a href="/user">Profile</a>
+                <a href="/freinds">My Friends</a>
+                <a href="/saved" class="active">Saved Ads</a>
+                <a href="/logout" onclick="return confirm('⚠️ Logout?')">Logout</a>
+            </nav>
+        </div>
+        <style>
+            .profile-avatar {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: #fff;
+                margin: 0 auto 0.5rem;
+                user-select: none;
+            }
+        </style>
+        <div class="user-box">
+            <div class="profile-avatar" data-name="<%= user.username %>">
+                <%= user.username.charAt(0).toUpperCase() %>
+            </div>
+            <strong>
+                <%= user.username %>
+            </strong>
+            <small>Premium Seller</small>
+        </div>
+        <script>
+            function getAvatarColor(name) {
+                const colors = [
+                    "#1a73e8", // Google blue
+                    "#34a853", // Google green
+                    "#fbbc05", // Google yellow
+                    "#ea4335", // Google red
+                    "#9334e6", // purple
+                    "#f06292", // pink
+                    "#00acc1", // cyan
+                    "#5c6bc0"  // indigo
+                ];
+
+                let hash = 0;
+                for (let i = 0; i < name.length; i++) {
+                    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+                }
+
+                return colors[Math.abs(hash) % colors.length];
+            }
+
+            document.querySelectorAll(".profile-avatar").forEach(el => {
+                const name = el.dataset.name || "U";
+                el.style.backgroundColor = getAvatarColor(name);
+            });
+        </script>
+    </aside>
+
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <h1>📂 Saved Ads</h1>
+    </div>
+
+    <!-- Main -->
+    <main class="main">
+        <% if (savedAds.length> 0) { %>
+            <div class="grid">
+                <% savedAds.forEach(ad=> { %>
+                    <div class="card">
+                        <a href="/property/<%= ad.category %>/<%= ad.adId %>">
+                            📂
+                            <div class="card-content">
+                                <h3>
+                                    <%= ad.title %>
+                                </h3>
+
+                                <% if (user.country==='ghana' ) { %>
+                                    <div class="price">₵<%= Number(ad.price).toLocaleString() %>
+                                    </div>
+                                    <% } %>
+
+                                        <% if (user.country==='nigeria' ) { %>
+                                            <div class="price">₦<%= Number(ad.price).toLocaleString() %>
+                                            </div>
+                                            <% } %>
+
+                                                <div class="details">
+                                                    <%= ad.location %>, <%= ad.specific %>
+                                                </div>
+                            </div>
+                        </a>
+
+                        <!-- DELETE BUTTON -->
+                        <form action="/saved/delete" method="POST" class="delete-form">
+                            <input type="hidden" name="adId" value="<%= ad.adId %>">
+                            <button type="submit" class="delete-btn" onclick="return confirm('Remove this saved ad?')">
+                                🗑 Remove
+                            </button>
+                        </form>
+                    </div>
+
+                    <% }) %>
+            </div>
+            <% } else { %>
+                <p class="empty-msg">You haven’t saved any ads yet 🚀</p>
+                <% } %>
+    </main>
+    <script src="/stop.js"></script>
+
+    <script>
+        // Sidebar toggle
+        const hamburger = document.getElementById("hamburger");
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+
+        hamburger.addEventListener("click", () => {
+            sidebar.classList.toggle("show");
+            overlay.classList.toggle("show");
+        });
+
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("show");
+            overlay.classList.remove("show");
+        });
+
+        // Loader hide after page load
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                const loader = document.getElementById("loader");
+                loader.style.opacity = "0";
+                setTimeout(() => loader.style.display = "none", 500);
+            }, 1500);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Property Details - NeonX</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+
+
+
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: #fff;
+      border-right: 1px solid #eee;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1rem;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      overflow-y: auto;
+    }
+
+    .sidebar .logo img {
+      width: 30%;
+      margin-bottom: 2rem;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .nav a {
+      padding: 0.7rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      transition: 0.3s;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .user-box {
+      background: #f1f5f9;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      text-align: center;
+    }
+
+
+
+    .user-box img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      margin-bottom: 0.5rem;
+    }
+
+
+
+
+    @media(max-width: 768px) {
+      .main {
+        margin-left: 0;
+        padding: 1rem;
+      }
+
+      .topbar {
+        left: 0;
+        padding: 0 15px;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .sidebar {
+        display: none;
+      }
+    }
+  </style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f9fafb;
+      color: #333;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+      border-radius: 8px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: #fff;
+      border-right: 1px solid #eee;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.2rem;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 300;
+      transition: left 0.3s ease;
+    }
+
+    .sidebar .logo img {
+      width: 40%;
+      margin-bottom: 2rem;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .nav a {
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #444;
+      transition: 0.3s;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .user-box {
+      background: #f1f5f9;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      text-align: center;
+    }
+
+    .user-box img {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 250;
+      display: none;
+    }
+
+    .overlay.show {
+      display: block;
+    }
+
+    /* Topbar */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 250px;
+      right: 0;
+      height: 65px;
+      background: #2563eb;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 200;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    .hamburger span {
+      width: 22px;
+      height: 3px;
+      background: #fff;
+      border-radius: 3px;
+    }
+
+    /* Main */
+    .main {
+      margin-left: 250px;
+      flex: 1;
+      overflow-y: auto;
+      padding: 90px 2rem 2rem;
+    }
+
+    /* Property Section */
+    .property-section {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .images {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .main-image {
+      height: 400px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .thumbnails {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .thumbnails img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: 0.2s;
+      border-radius: 6px;
+    }
+
+    .thumbnails img:hover {
+      border-color: #2563eb;
+    }
+
+    .copy {
+      position: relative;
+      display: inline-block;
+    }
+
+    #tooltip {
+      visibility: hidden;
+      background: #28a745;
+      color: #fff;
+      font-size: 14px;
+      border-radius: 20px;
+      padding: 4px 10px;
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+
+    #tooltip.show {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .info h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    .price {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #2563eb;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .features span {
+      background: #f7f7f7;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin-right: 6px;
+    }
+
+    .description {
+      margin: 1rem 0;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 1.2rem;
+    }
+
+    .btn {
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-align: center;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .btn-outline {
+      border: 1px solid #ccc;
+      background: #fff;
+      color: #333;
+    }
+
+    .btn-outline:hover {
+      border-color: #2563eb;
+      color: #2563eb;
+    }
+
+    /* Seller Box */
+    .seller-box {
+      margin-top: 2rem;
+      background: #fff;
+      padding: 1.2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .seller-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .seller-info img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+    }
+
+    .seller-details h3 {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .seller-details small {
+      color: #666;
+      font-size: 0.85rem;
+    }
+
+    /* More Listings */
+    h2 {
+      margin: 2rem 0 1rem;
+      font-size: 1.3rem;
+    }
+
+    .more-listings {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card img {
+      height: 180px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .card-content {
+      padding: 0.8rem;
+      flex: 1;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .card .price {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #2563eb;
+    }
+
+    .card .details {
+      font-size: 0.85rem;
+      color: #555;
+      text-transform: capitalize;
+    }
+
+
+    @media (max-width: 1024px) {
+      .property-section {
+        grid-template-columns: 1fr;
+      }
+
+      .main-image {
+        height: 250px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hamburger {
+        display: flex;
+      }
+
+      .sidebar {
+        left: -260px;
+      }
+
+      .sidebar.show {
+        left: 0;
+      }
+
+      .topbar {
+        left: 0;
+      }
+
+      .main {
+        margin-left: 0;
+        padding: 90px 1rem 1rem;
+      }
+    }
+
+    /* Notifications */
+    .notifications-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 9999;
+    }
+
+    .notification-card {
+      position: relative;
+      background: linear-gradient(135deg, #4f46e5, #3b82f6);
+      color: #fff;
+      padding: 15px 20px;
+      border-radius: 15px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+      animation: slideIn 0.7s ease, float 3s ease-in-out infinite;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .notification-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .notification-card a {
+      color: #ffdd57;
+      font-weight: bold;
+    }
+
+    .notification-card a:hover {
+      text-decoration: underline;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .close-btn:hover {
+      transform: scale(1.2);
+      color: #ff4d4d;
+    }
+
+    /* Loader */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    #loader img {
+      width: 120px;
+      margin-bottom: 15px;
+      animation: pulseLogo 1.5s infinite;
+    }
+
+    .loader-motto {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #2563eb;
+      margin-bottom: 20px;
+    }
+
+    .loader-bar {
+      width: 220px;
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .loader-progress {
+      width: 0%;
+      height: 100%;
+      background: #2563eb;
+      animation: loadProgress 1s forwards;
+      /* 1 second animation */
+    }
+
+    @keyframes loadProgress {
+      from {
+        width: 0%;
+      }
+
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes pulseLogo {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    .warning {
+      color: green;
+
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* ===== FLOATING ACTION BUTTONS ===== */
+    .fab-container {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 9999;
+    }
+
+    /* Button base */
+    .fab {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: none;
+      font-size: 22px;
+      color: #fff;
+      background: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    /* Hover / tap */
+    .fab:hover {
+      transform: scale(1.12);
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Colors */
+    .fab.call {
+      background: #16a34a;
+    }
+
+    /* green */
+    .fab.chat {
+      background: #2563eb;
+    }
+
+    /* blue */
+    .fab.feedback {
+      background: #f59e0b;
+    }
+
+    .fab-item.save {
+      background: #840bf5;
+    }
+
+    /* amber */
+
+    /* Mobile tweak */
+    @media (max-width: 768px) {
+      .fab {
+        width: 52px;
+        height: 52px;
+        font-size: 20px;
+      }
+    }
+
+    /* ===== EXPANDABLE FAB ===== */
+    .fab-wrapper {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+    }
+
+    /* Main button */
+    .fab-main {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: #fff;
+      font-size: 24px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      transition: transform 0.3s ease;
+    }
+
+    .fab-main.open {
+      transform: rotate(45deg);
+    }
+
+    /* Menu */
+    .fab-menu {
+      position: absolute;
+      bottom: 70px;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+
+    .fab-menu.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    /* Items */
+    .fab-item {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: none;
+      font-size: 22px;
+      color: #fff;
+      background: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: transform 0.25s ease;
+    }
+
+    .fab-item:hover {
+      transform: scale(1.12);
+    }
+
+    /* Colors */
+    .fab-item.call {
+      background: #16a34a;
+    }
+
+    .fab-item.chat {
+      background: #2563eb;
+    }
+
+    .fab-item.feedback {
+      background: #f59e0b;
+    }
+
+    .fab-item.save {
+      background: #840bf5;
+    }
+
+
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .fab-main {
+        width: 54px;
+        height: 54px;
+      }
+
+      .fab-item {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+      }
+    }
+
+    /* Phone reveal animation */
+    .fab-item.call {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    /* Tooltip */
+    .copy-tooltip {
+      position: absolute;
+      top: -32px;
+      background: #16a34a;
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateY(5px);
+    }
+
+    .copy-tooltip.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<!-- Loader -->
+<div id="loader">
+  <img src="/NeonX Logo on Dark Backdrop.png" alt="NeonX Logo">
+  <span class="warning">
+    More posting, more rating
+  </span>
+  <br>
+  <h2 class="loader-motto">Loading Property Details...</h2>
+  <div class="loader-bar">
+    <div class="loader-progress"></div>
+  </div>
+</div>
+<!-- FLOATING ACTION BUTTONS -->
+<!-- EXPANDABLE FLOATING ACTION BUTTON -->
+<% if (home.userId.email !==user.email) { %>
+  <div class="fab-wrapper">
+
+    <button class="fab-main" id="fabMain">⚡</button>
+
+    <div class="fab-menu" id="fabMenu">
+
+      <!-- Call -->
+      <button class="fab-item call" id="callBtn" data-number="<%= home.phonenumber %>">
+        📞
+        <span class="copy-tooltip" id="copyTip">Copied ✓</span>
+      </button>
+
+      <!-- Chat -->
+      <a href="/seller/<%=home.userId.email%>/<%=home.userId._id%>/listings" class="fab-item chat" title="Chat Seller">
+        💬
+      </a>
+
+      <!-- Feedback -->
+      <a href="/feedback/<%=home.userId._id%>" class="fab-item feedback" title="Feedback">
+        ⭐
+      </a>
+      <a href="/save-ads/<%=home.category%>/<%=home._id%>/<%=home.title%>/<%=home.price%>/<%=home.location%>/<%=home.specific%>"
+        class="fab-item saved" onclick="alert('This property has been saved, go to saved ads tab to view it')"
+        title="Feedback">
+        📂
+      </a>
+
+    </div>
+  </div>
+  <% } %>
+
+    <script>
+      const fabMain = document.getElementById("fabMain");
+      const fabMenu = document.getElementById("fabMenu");
+      const callBtn = document.getElementById("callBtn");
+
+      /* Toggle FAB */
+      if (fabMain) {
+        fabMain.addEventListener("click", () => {
+          fabMenu.classList.toggle("show");
+          fabMain.classList.toggle("open");
+        });
+      }
+
+      /* Call reveal logic */
+      if (callBtn) {
+        let revealed = false;
+        const tooltip = document.getElementById("copyTip");
+
+        callBtn.addEventListener("click", async () => {
+          const number = callBtn.dataset.number;
+
+          // 1️⃣ Reveal number
+          if (!revealed) {
+            callBtn.firstChild.textContent = number;
+            callBtn.style.width = "auto";
+            callBtn.style.padding = "0 14px";
+            callBtn.style.borderRadius = "14px";
+            callBtn.style.fontSize = "14px";
+            revealed = true;
+            return;
+          }
+
+          // 2️⃣ Copy on second click
+          try {
+            await navigator.clipboard.writeText(number);
+
+            // Show tooltip
+            tooltip.classList.add("show");
+
+            setTimeout(() => {
+              tooltip.classList.remove("show");
+            }, 1200);
+
+          } catch (err) {
+            alert("Failed to copy number");
+          }
+        });
+      }
+
+    </script>
+
+
+    <body>
+      <!-- Sidebar -->
+      <aside class="sidebar" id="sidebar">
+        <div>
+          <div class="logo">
+            <img src="/NeonX Logo on Dark Backdrop.png" alt="NeonX Logo">
+          </div>
+          <nav class="nav">
+            <a href="/dashboard" class="active"> Homepage</a>
+            <a href="/profile"> Dashboard</a>
+            <a href="/sell"> Add Listing</a>
+            <a href="/inbox"> Messages</a>
+            <a href="/user"> Profile</a>
+            <a href="/saved">Saved Ads</a>
+            <a href="/freinds">My Friends</a>
+            <a href="/logout" onclick="return confirm('Logout?')"> Logout</a>
+          </nav>
+        </div>
+        <style>
+          .profile-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+            margin: 0 auto 0.5rem;
+            user-select: none;
+          }
+        </style>
+        <div class="user-box">
+          <div class="profile-avatar" data-name="<%= user.username %>">
+            <%= user.username.charAt(0).toUpperCase() %>
+          </div>
+          <strong>
+            <%= user.username %>
+          </strong>
+          <small>Premium Seller</small>
+        </div>
+        <script>
+          function getAvatarColor(name) {
+            const colors = [
+              "#1a73e8", // Google blue
+              "#34a853", // Google green
+              "#fbbc05", // Google yellow
+              "#ea4335", // Google red
+              "#9334e6", // purple
+              "#f06292", // pink
+              "#00acc1", // cyan
+              "#5c6bc0"  // indigo
+            ];
+
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) {
+              hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            }
+
+            return colors[Math.abs(hash) % colors.length];
+          }
+
+          document.querySelectorAll(".profile-avatar").forEach(el => {
+            const name = el.dataset.name || "U";
+            el.style.backgroundColor = getAvatarColor(name);
+          });
+        </script>
+      </aside>
+
+      <div class="overlay" id="overlay"></div>
+
+      <div class="topbar">
+        <div class="hamburger" id="hamburger">
+          <span></span><span></span><span></span>
+
+
+        </div>
+        <h1>Outlook</h1>
+        <style>
+          .boost-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.8rem 1.5rem;
+            background: #f59e0b;
+            color: #fff;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.6rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+
+          .boost-btn:hover {
+            background: #d97706;
+            transform: scale(1.05);
+          }
+        </style>
+        <button type="submit" class="boost-btn"><a href="/sell">sell</a></button>
+
+      </div>
+      <style>
+        /* ================= STICKY CHIP BAR ================= */
+        /* ================= STICKY CHIP BAR ================= */
+        .chip-wrapper {
+          position: fixed;
+          top: 65px;
+          /* below topbar */
+          left: 20%;
+          right: 0;
+          z-index: 150;
+          background: #f9fafb;
+          border-bottom: 1px solid #e5e7eb;
+        }
+
+        /* Horizontal swipe container */
+        .chip-bar {
+          display: flex;
+          gap: 10px;
+          padding: 10px 12px;
+
+          overflow-x: auto;
+          overflow-y: hidden;
+
+          -webkit-overflow-scrolling: touch;
+          /* ✅ iOS smooth swipe */
+          scroll-behavior: smooth;
+
+          white-space: nowrap;
+        }
+
+        /* Hide scrollbar */
+        .chip-bar::-webkit-scrollbar {
+          display: none;
+        }
+
+        .chip {
+          flex: 0 0 auto;
+          /* 🔥 VERY IMPORTANT */
+          padding: 8px 14px;
+          border-radius: 999px;
+          border: 1px solid #d1d5db;
+          background: #fff;
+          cursor: pointer;
+          white-space: nowrap;
+          transition: transform 0.15s ease, background 0.2s ease;
+        }
+
+        /* Tap feedback */
+        .chip:active {
+          transform: scale(0.95);
+        }
+
+        .chip.active {
+          background: #2563eb;
+          color: #fff;
+          border-color: #2563eb;
+        }
+
+        @media (max-width: 768px) {
+          .chip-wrapper {
+            position: fixed;
+            left: 0%;
+          }
+
+          .chip-bar {
+            padding-bottom: 14px;
+          }
+        }
+      </style>
+
+      <!-- Main Content -->
+      <main class="main">
+
+        <!-- STICKY CHIPS -->
+        <%if(home.category=='Vehicle' ){%>
+          <div class="chip-wrapper">
+            <div class="chip-bar">
+              <button onclick="goBack()" class="chip">←
+              </button>
+              <button class="chip" data-transmission="vehicle parts">vehicle parts</button>
+              <button class="chip" data-transmission="car">Vehicles</button>
+              <button class="chip" data-transmission="truck">Truck</button>
+              <button class="chip" data-transmission="bike">Bike</button>
+              <button class="chip" data-transmission="boat">Boat</button>
+
+            </div>
+          </div>
+          <%}%>
+            <%if(home.category=='Devices' ){%>
+              <div class="chip-wrapper">
+                <div class="chip-bar">
+                  <button onclick="goBack()" class="chip active">←
+                  </button>
+
+                  <button class="chip" data-transmission="new">New</button>
+                  <button class="chip" data-transmission="refurbished">Refurbished</button>
+                  <button class="chip" data-transmission="used">Used</button>
+
+
+                </div>
+              </div>
+              <%}%>
+                <%if(home.category=='Fashion' ){%>
+                  <div class="chip-wrapper">
+                    <div class="chip-bar">
+                      <button onclick="goBack()" class="chip active">←
+                      </button>
+
+                      <button class="chip" data-transmission="male">male</button>
+                      <button class="chip" data-transmission="female">female</button>
+                      <button class="chip" data-transmission="custom">custom</button>
+                      <button class="chip" data-transmission="baby">Baby</button>
+                      <button class="chip" data-transmission="cosmetics">Cosmetics</button>
+
+
+
+                    </div>
+                  </div>
+                  <%}%>
+                    <%if(home.category=='Appliances' ){%>
+                      <div class="chip-wrapper">
+                        <div class="chip-bar">
+                          <button onclick="goBack()" class="chip active">←
+                          </button>
+                          <button class="chip" data-transmission="amatuer">Learner</button>
+                          <button class="chip" data-transmission="professionals">Professionals</button>
+                          <button class="chip" data-transmission="experts">Experts</button>
+
+
+                        </div>
+                      </div>
+                      <%}%>
+                        <%if(home.category=='Furnitures' ){%>
+                          <div class="chip-wrapper">
+                            <div class="chip-bar">
+                              <button onclick="goBack()" class="chip active">←
+                              </button>
+
+                              <button class="chip" data-transmission="new">new</button>
+                              <button class="chip" data-transmission="refurbished">refurbished</button>
+                              <button class="chip" data-transmission="used">used</button>
+
+                            </div>
+                          </div>
+                          <%}%>
+                            <%if(home.category=='Houses' ){%>
+                              <div class="chip-wrapper">
+                                <div class="chip-bar">
+                                  <button onclick="goBack()" class="chip active">←
+                                  </button>
+
+                                  <button class="chip" data-transmission="1">self contain</button>
+
+                                  <button class="chip" data-transmission="2">2 Rooms</button>
+                                  <button class="chip" data-transmission="3">3 Rooms</button>
+                                  <button class="chip" data-transmission="4">4 Rooms</button>
+                                  <button class="chip" data-transmission="5">5 Rooms</button>
+                                  <button class="chip" data-transmission="6">6 Rooms</button>
+                                  <button class="chip" data-transmission="7">7 Rooms</button>
+                                  <button class="chip" data-transmission="8">8 Rooms</button>
+                                  <button class="chip" data-transmission="9">9 Rooms</button>
+                                  <button class="chip" data-transmission="10">10 Rooms</button>
+
+
+
+                                </div>
+                              </div>
+                              <%}%>
+                                <script>
+                                  const chipBar = document.querySelector(".chip-bar");
+
+                                  chips.forEach(chip => {
+                                    chip.addEventListener("click", () => {
+                                      chip.scrollIntoView({
+                                        behavior: "smooth",
+                                        inline: "center",
+                                        block: "nearest"
+                                      });
+                                    });
+                                  });
+                                </script>
+
+
+                                <!-- Price Filter -->
+                                <br><br>
+                                <div style="margin-bottom:1.5rem;">
+                                  <strong>Filter Price</strong> <br>
+                                  <input type="text" id="minPrice" placeholder="Min Price"
+                                    style="padding:5px;border-radius:6px;border:1px solid #ccc;margin-right:5px;">
+                                  <input type="text" id="maxPrice" placeholder="Max Price"
+                                    style="padding:5px;border-radius:6px;border:1px solid #ccc;margin-right:5px;">
+                                  <button id="filterBtn" class="btn btn-outline">Filter</button>
+                                </div>
+                                <script>
+                                  const priceInput = document.getElementById("minPrice");
+
+                                  // Format with commas while typing
+                                  priceInput.addEventListener("input", function () {
+                                    let value = this.value.replace(/,/g, ""); // remove commas
+
+                                    // allow only digits
+                                    if (!/^\d*$/.test(value)) {
+                                      this.value = this.value.replace(/[^\d,]/g, "");
+                                      return;
+                                    }
+
+                                    if (value) {
+                                      this.value = Number(value).toLocaleString();
+                                    }
+                                  });
+                                  const price = document.getElementById("maxPrice");
+
+                                  // Format with commas while typing
+                                  price.addEventListener("input", function () {
+                                    let value = this.value.replace(/,/g, ""); // remove commas
+
+                                    // allow only digits 
+                                    if (!/^\d*$/.test(value)) {
+                                      this.value = this.value.replace(/[^\d,]/g, "");
+                                      return;
+                                    }
+
+                                    if (value) {
+                                      this.value = Number(value).toLocaleString();
+                                    }
+                                  });
+
+
+
+
+                                </script>
+                                <!-- Seller Box -->
+                                <a href="/seller/<%=home.userId.email%>/<%=home.userId._id%>/listings">
+
+                                  <div class="seller-box">
+                                    <div class="seller-info">
+                                      <style>
+                                        .avatar {
+                                          width: 60px;
+                                          height: 60px;
+                                          border-radius: 50%;
+                                          background: #2563eb;
+                                          /* default color */
+                                          display: flex;
+                                          align-items: center;
+                                          justify-content: center;
+                                          overflow: hidden;
+                                        }
+
+                                        .avatar img {
+                                          width: 100%;
+                                          height: 100%;
+                                          object-fit: cover;
+                                        }
+
+                                        .avatar-letter {
+                                          color: #fff;
+                                          font-size: 1.4rem;
+                                          font-weight: 700;
+                                          text-transform: uppercase;
+                                        }
+                                      </style>
+
+                                      <div class="avatar">
+
+                                        <span class="avatar-letter">
+                                          <%= home.userId.email.charAt(0).toUpperCase() %>
+                                        </span>
+
+                                      </div>
+                                      <script>
+                                        document.querySelectorAll(".avatar").forEach(avatar => {
+                                          const colors = [
+                                            "#2563eb", "#16a34a", "#dc2626",
+                                            "#9333ea", "#f59e0b", "#0d9488"
+                                          ];
+
+                                          const name = avatar.dataset.name || "X";
+                                          const index = name.charCodeAt(0) % colors.length;
+
+                                          avatar.style.background = colors[index];
+                                        });
+                                      </script>
+
+                                      <style>
+                                        .seller-details {
+                                          overflow: hidden;
+                                        }
+                                      </style>
+                                      <div class="seller-details">
+
+                                        <h3>
+                                          <%= home.userId.email %>
+                                            <small style="text-decoration:underline;">See more</small>
+                                        </h3>
+                                        <div class="info-item"><strong>Rating </strong>
+                                          <% if(home.userId.rating==0){ %>
+                                            ☆☆☆☆☆
+                                            <% } %>
+                                              <% if(home.userId.rating==1){ %>⭐☆☆☆☆<% } %>
+                                                  <% if(home.userId.rating==2){ %>⭐⭐☆☆☆<% } %>
+                                                      <% if(home.userId.rating==3){ %>⭐⭐⭐☆☆<% } %>
+                                                          <% if(home.userId.rating==4){ %>⭐⭐⭐⭐☆<% } %>
+                                                              <% if(home.userId.rating==5){ %>⭐⭐⭐⭐⭐<% } %>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div><br>
+                                </a>
+                                <% if (home.userId.email==user.email){%>
+                                  <button class="btn btn-outline">
+                                    <a href="/boost/<%=home.category%>/<%=home._id%>">
+
+                                      Boost visibility
+                                    </a>
+
+                                  </button><br>
+                                  <%}else{%>
+                                    <style>
+                                      .fx {
+                                        display: flex;
+                                      }
+
+                                      .fx button {
+                                        margin: 5px;
+                                      }
+
+                                      #submitOverlay {
+                                        position: fixed;
+                                        inset: 0;
+                                        display: none;
+                                        background: rgba(0, 0, 0, 0.6);
+                                        align-items: center;
+                                        justify-content: center;
+                                        z-index: 9999;
+                                      }
+
+                                      .overlay-box {
+                                        background: #fff;
+                                        padding: 25px 30px;
+                                        border-radius: 12px;
+                                        position: fixed;
+                                        top: 40%;
+
+                                        left: 15%;
+                                        text-align: center;
+                                        width: 90%;
+                                        max-width: 300px;
+                                      }
+
+                                      .overlay-box p {
+                                        margin-top: 15px;
+                                        font-weight: 600;
+                                        color: #333;
+                                      }
+
+                                      /* Spinner */
+                                      .spinner {
+                                        width: 40px;
+                                        height: 40px;
+                                        border: 4px solid #e5e7eb;
+                                        border-top: 4px solid #2563eb;
+                                        border-radius: 50%;
+                                        animation: spin 0.8s linear infinite;
+                                        margin: auto;
+                                      }
+
+                                      @keyframes spin {
+                                        to {
+                                          transform: rotate(360deg);
+                                        }
+                                      }
+                                    </style>
+                                    <div class="fx">
+                                      <style>
+                                        .suck {
+                                          border: 1px solid #2563eb;
+                                          color: #2563eb;
+                                        }
+
+                                        .suck:hover {
+                                          transition: 1.5s ease;
+                                          background-color: #2563eb;
+                                          color: #ccc;
+                                        }
+                                      </style>
+                                      <form
+                                        action="/chat/<%=home.userId._id%>/<%=home._id%>/<%=home.title%>/unavailable"
+                                        method="POST">
+                                        <button class="btn btn-outline"
+                                          onclick=" return confirm('if you mark unavailable it will be sent to the seller, Are you sure you want to mark this ads unavailable?')"
+                                          style="margin-top:10px;">Ads Unavailable?</button>
+                                      </form>
+                                      <button class="btn callme suck btn-outline">
+
+
+                                        call back
+
+                                      </button>
+                                      <%if(home.category=='Vehicle' ){%>
+                                        <form action="/vehicles" method="GET">
+                                          <button class="btn btn-outline" style="margin-top:10px;">Post like
+                                            this</button>
+                                        </form>
+                                        <%}%>
+                                          <%if(home.category=='Appliances' ){%>
+                                            <form action="/appliances" method="GET">
+                                              <button class="btn btn-outline" style="margin-top:10px;">Post like
+                                                this</button>
+                                            </form>
+                                            <%}%>
+                                              <%if(home.category=='Houses' ){%>
+                                                <form action="/houses" method="GET">
+                                                  <button class="btn btn-outline" style="margin-top:10px;">Post like
+                                                    this</button>
+                                                </form>
+                                                <%}%>
+                                                  <%if(home.category=='Devices' ){%>
+                                                    <form action="/devices" method="GET">
+                                                      <button class="btn btn-outline" style="margin-top:10px;">Post like
+                                                        this</button>
+                                                    </form>
+                                                    <%}%>
+                                                      <%if(home.category=='Furnitures' ){%>
+                                                        <form action="/furnitures" method="GET">
+                                                          <button class="btn btn-outline" style="margin-top:10px;">Post
+                                                            like this</button>
+                                                        </form>
+                                                        <%}%>
+                                                          <%if(home.category=='Fashion' ){%>
+                                                            <form action="/fashion" method="GET">
+                                                              <button class="btn btn-outline"
+                                                                style="margin-top:10px;">Post like this</button>
+                                                            </form>
+                                                            <%}%>
+
+                                    </div>
+                                    <div id="submitOverlay" class="boxers">
+                                      <div class="overlay-box">
+                                        <div class="spinner"></div>
+                                        <form
+                                          action="/propose/<%=home.userId._id%>/<%=home.category%>/<%=home._id%>/<%=home.title%>"
+                                          method="POST"><br>
+                                          <h3>Send call back</h3><br>
+                                          <input type="number" placeholder="enter your phone number..."
+                                            name="phonenumber"
+                                            style="padding:5px;border-radius:6px;border:1px solid #ccc;margin-right:5px;"
+                                            required>
+                                          <br><br>
+                                          <div class="fx">
+                                            <button class="btn btn-outline del">&times;</button>
+                                            <button type="submit"
+                                              onclick="alert('dont forget to give this seller feedback it really helps')"
+                                              class="btn btn-outline">continue</button>
+                                          </div>
+                                        </form>
+                                        <p>Waiting for you…</p>
+                                      </div>
+                                    </div>
+                                    <script>
+                                      const del = document.querySelector('.del')
+                                      const callBack = document.querySelector('.callme');
+                                      const callBox = document.querySelector('.boxers');
+                                      console.log(callBox)
+                                      console.log(callBack)
+                                      callBack.addEventListener('click', function () {
+                                        callBox.style.display = 'block';
+                                      })
+                                      del.addEventListener('click', function (e) {
+                                        e.preventDefault();
+                                        callBox.style.display = 'none';
+                                      })
+
+                                    </script>
+                                    <%}%> <br>
+                                      <!-- Property Section -->
+                                      <div class="property-section">
+                                        <!-- Images -->
+                                        <div class="images">
+                                          <img src="/<%= home.bgimg %>" class="main-image" alt="Main Image"
+                                            loading="lazy">
+                                          <span>📸 More Images</span>
+                                          <div class="thumbnails">
+
+                                            <% ['bgimg','extraimg','secondimg','thirdimg'].forEach(img=> { %>
+                                              <% if(home[img]){ %>
+                                                <img src="/<%=home[img]%>" alt="Thumbnail" loading="lazy">
+                                                <% } %>
+                                                  <% }) %>
+                                          </div>
+                                        </div>
+
+                                        <!-- Info -->
+                                        <div class="info">
+                                          <h1>
+                                            <style>
+                                              h1 {
+                                                text-transform: capitalize;
+                                              }
+                                            </style>
+                                            <%= home.title %>
+                                          </h1>
+                                          <%if(home.country=='ghana' ){%>
+                                            <div class="price">₵<%=Number(home.price).toLocaleString()%>
+                                            </div>
+                                            <%}%>
+                                              <%if(home.country=='nigeria' ){%>
+                                                <div class="price">₦<%=Number(home.price).toLocaleString()%>
+                                                </div>
+                                                <%}%>
+                                                  <p class="description">
+                                                    <%= home.description %>
+                                                  </p>
+
+                                        </div>
+                                        <div class="features">
+                                          <% if(home.transmission){ %><span>Transmission: <%= home.transmission %>
+                                                </span><br>
+                                            <% } %>
+                                              <% if(home.beds){ %><span>🛏 <%= home.beds %> Beds</span><br>
+                                                <% } %>
+                                                  <% if(home.baths){ %><span>🛁 <%= home.baths %> Baths</span><br>
+                                                    <% } %>
+                                                      <% if(home.condition){ %><span>Condition: <%= home.condition %>
+                                                            </span><br>
+                                                        <% } %>
+                                                          <% if(home.fueltype){ %> <br><span>Fuel Type: <%=
+                                                                home.fueltype %></span>
+                                                            <% } %>
+                                        </div>
+                                        <br>
+                                        <style>
+                                          .loc {
+                                            text-transform: capitalize;
+                                          }
+                                        </style>
+                                        <div class="features">
+                                          <span class="loc">
+                                            <%=home.location%>, <%=home.specific%>
+                                          </span>
+                                        </div>
+
+
+
+                                      </div>
+
+                                      </div>
+
+
+
+                                      <!-- More Listings -->
+                                      <h2 id="similarListings">Similar Listings</h2>
+                                      <div class="more-listings" id="listingContainer">
+                                        <% more.forEach(list=> { %>
+                                          <%if( list.country==user.country){%>
+                                            <div class="card" data-price="<%= list.price %>" <% if(list.transmission){
+                                              %>
+                                              data-transmission="<%= list.transmission.toLowerCase() %>"
+                                                <% } %>
+                                                  <% if(list.condition){ %>
+                                                    data-transmission="<%= list.condition.toLowerCase() %>"
+                                                      <% } %>
+                                                        <% if(list.beds){ %>
+                                                          data-transmission="<%= list.beds %>"
+                                                            <% } %>
+                                                              <% if(list.gender){ %>
+                                                                data-transmission="<%= list.gender %>"
+                                                                  <% } %>
+
+                                                                    >
+
+
+
+                                                                    <a
+                                                                      href="/property/<%=list.category%>/<%= list._id %>">
+                                                                      <div class="badge">
+                                                                      </div>
+                                                                      <img src="/<%= list.bgimg %>" alt="Listing Image">
+                                                                      <div class="card-content">
+                                                                        <h3>
+                                                                          <%= list.title %>
+                                                                            <%if(list.category=='Houses' ){%>
+                                                                              ( <%=list.beds%> Rooms)
+                                                                                <%}%>
+                                                                                  <%if(list.category=='Vehicle' ){%>
+                                                                                    (<%=list.transmission%> )
+                                                                                      <%}%>
+                                                                                        <%if(list.category=='Fashion'
+                                                                                          ){%>
+                                                                                          (<%=list.gender%> Fashion)
+                                                                                            <%}%>
+                                                                                              <%if(list.category=='Appliances'
+                                                                                                ){%>
+                                                                                                (<%=list.condition%> )
+                                                                                                  <%}%>
+                                                                                                    <%if(list.category=='Devices'
+                                                                                                      ){%>
+                                                                                                      (
+                                                                                                      <%=list.condition%>
+                                                                                                        )
+                                                                                                        <%}%>
+                                                                                                          <%if(list.category=='Furnitures'
+                                                                                                            ){%>
+                                                                                                            (
+                                                                                                            <%=list.condition%>
+                                                                                                              )
+                                                                                                              <%}%>
+                                                                        </h3>
+                                                                        <%if(list.country=='ghana' ){%>
+                                                                          <div class="price">₵
+                                                                            <%=Number(list.price).toLocaleString()%>
+                                                                          </div>
+                                                                          <%}%>
+                                                                            <%if(list.country=='nigeria' ){%>
+                                                                              <div class="price">₦
+                                                                                <%=Number(list.price).toLocaleString()%>
+                                                                              </div>
+                                                                              <%}%>
+
+                                                                                <div class="details">
+                                                                                  <%= list.location %>,
+                                                                                    <%=list.specific%>
+                                                                                </div>
+                                                                      </div>
+                                                                    </a>
+                                            </div>
+                                            <%}%>
+                                              <%if( list.country !=user.country){%>
+
+                                                <%}%>
+
+                                                  <% }) %>
+                                      </div>
+
+      </main>
+      <% if(notifications.length>0 ){ %>
+        <div class="notifications-container" id="id">
+
+          <% notifications.forEach(not=> { %>
+            <%if(not.isfeedback==false && not.isChat==false){%>
+              <a href="/inbox">
+
+                <div class="notification-card">
+                  <button class="close-btn"></button>
+                  <div class="notification-header"><span>💬</span><strong>New Message</strong></div>
+                  <p>From <a href="/inbox">
+                      <%= not.sender.username %>
+
+                    </a>
+                    <%= not.content%> (check inbox)
+                  </p>
+                  <a href="/chat/feedback/<%=user._id%>">Mark As Read</a>
+                </div>
+              </a>
+              <%} else{%>
+                <a href="<%=not.lik%>">
+
+                  <div class="notification-card">
+                    <button class="close-btn"></button>
+                    <div class="notification-header"><span>💬</span><strong>New Message</strong></div>
+                    <p>From <a href="<%=not.lik%>">
+                        Neonx
+                        (check )</a>
+                      <br>
+                    <p>
+                      <%=not.content%>
+                    </p>
+                    </p>
+
+                    <a href="/chat/feedback/<%=user._id%>">Mark As Read</a>
+                  </div>
+                </a>
+                <%}%>
+                  <% }) %>
+        </div>
+
+        <% } %>
+
+          <script>
+            function goBack() {
+              if (window.history.length > 1) {
+                window.history.back();
+              } else {
+                window.location.href = "index.html"; // fallback page
+              }
+            }
+          </script>
+          <script>
+            const chips = document.querySelectorAll(".chip");
+            const cards = document.querySelectorAll("#listingContainer .card");
+            const targetSection = document.getElementById("similarListings");
+
+            chips.forEach(chip => {
+              chip.addEventListener("click", () => {
+
+                // Active state
+                chips.forEach(c => c.classList.remove("active"));
+                chip.classList.add("active");
+
+                const selected = chip.dataset.transmission;
+
+                // Filter cards
+                cards.forEach(card => {
+                  const transmission = card.dataset.transmission;
+
+                  if (!selected || selected === "all") {
+                    card.style.display = "block";
+                  } else if (transmission === selected) {
+                    card.style.display = "block";
+                  } else {
+                    card.style.display = "none";
+                  }
+                });
+
+                // ⬇️ Smooth scroll to Similar Listings
+                if (targetSection) {
+                  targetSection.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                  });
+                }
+              });
+            });
+
+          </script>
+          <script>
+            window.addEventListener("load", () => {
+              setTimeout(() => {
+                const loaded = document.getElementById("id");
+                console.log(loaded)
+                console.log(loaded)
+                if (loaded) { setTimeout(() => loaded.style.display = 'none'); }
+              }, 1500);
+            });
+            const hamburger = document.getElementById("hamburger");
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("overlay");
+
+            hamburger.addEventListener("click", () => {
+              sidebar.classList.toggle("show");
+              overlay.classList.toggle("show");
+            });
+
+            overlay.addEventListener("click", () => {
+              sidebar.classList.remove("show");
+              overlay.classList.remove("show");
+            });
+
+            // Thumbnail switch
+            document.querySelectorAll('.thumbnails img').forEach(img => {
+              img.addEventListener('click', () => {
+                document.querySelector('.main-image').src = img.src;
+              });
+            });
+
+            // Copy phone
+
+            // Filter prices
+            const filterBtn = document.getElementById("filterBtn");
+            filterBtn.addEventListener("click", () => {
+              const minPrice = parseInt(document.getElementById("minPrice").value.replace(/,/g, '')) || 0;
+              const maxPrice = parseInt(document.getElementById("maxPrice").value.replace(/,/g, '')) || Infinity;
+              const cards = document.querySelectorAll('#listingContainer .card');
+
+              cards.forEach(card => {
+                const price = parseInt(card.dataset.price);
+                if (price >= minPrice && price <= maxPrice) {
+                  card.style.display = 'block';
+                } else {
+                  card.style.display = 'none';
+                }
+              });
+            });
+
+
+            // Loader: hide after 1 second
+            window.addEventListener("load", () => {
+              setTimeout(() => {
+                const loader = document.getElementById("loader");
+                loader.style.opacity = "0";
+                setTimeout(() => loader.style.display = "none", 500);
+              }, 1500); // 1 second
+            });
+
+
+
+          </script>
+
+    </body>
+
+</html>

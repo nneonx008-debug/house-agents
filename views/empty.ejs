@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <hr>
+    <div>
+        report from users
+        <%if(org.length> 0){%>
+            <%org.forEach(o=> {%>
+                <div>
+                    <a href="/seller/<%=o.email%>/<%=o.nin%>/listings">from <%=o.email%></a>
+                    <p>
+                        <%=o.message%>
+                    </p>
+                </div><br>
+                <hr>
+                <%})} else{%>
+                    <p>no reports</p>
+                    <%}%>
+    </div>
+    <hr>
+
+    <h1>you have <%=user.length%> users</h1>
+    <h1>you have <%=list.length%> listings/Ads</h1>
+
+    <hr>
+    <h2>payments?
+
+    </h2>
+    <%payment.forEach(p=> {%>
+        <p>
+            <%=p.email%>
+        </p>
+        <span>
+            <%=p.amount%>
+        </span>
+        <%})%>
+
+</body>
+
+</html>

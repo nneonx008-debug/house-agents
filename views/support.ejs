@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeonX Support</title>
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f9fafb;
+            color: #333;
+            display: flex;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Sidebar */
+
+        .content h1,
+        .content h2 {
+            color: #111;
+            margin-bottom: 15px;
+        }
+
+        .content h2 {
+            margin-top: 40px;
+            color: #2563eb;
+        }
+
+        .content p {
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .tips {
+            background: #eef;
+            padding: 15px;
+            border-left: 5px solid #2563eb;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="main">
+        <style>
+            .feedback-form {
+                background-color: #2563eb;
+                border: none;
+                color: white;
+                padding: 10px;
+                margin: 20px;
+            }
+        </style>
+        <button class="feedback-form" onclick="goBack()">
+            Go Back
+        </button>
+        <script>
+            function goBack() {
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    window.location.href = "index.html"; // fallback page
+                }
+            }
+        </script>
+        <!-- Seller Info -->
+        <div class="seller-box">
+            <h2>
+
+                Send neonx feedbacks or noticable problems
+                <div class="hideos feedback-form">
+                    <form class="tips" action="/supports/<%=user._id%>/<%=user.username %>/<%=user.email%>"
+                        method="POST">
+                        <textarea name="message" placeholder="Write your feedback..." required></textarea>
+                        <br> <button type="submit" onclick="alert('thanks for your feedback')">Submit Feedback</button>
+                    </form>
+                </div>
+            </h2>
+
+        </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <h1 id="about">About NeonX</h1>
+            <p>NeonX is a modern marketplace where you can buy, sell, and promote products securely. Whether it’s
+                houses,
+                cars, gadgets, or fashion items, NeonX connects buyers and sellers with ease.</p>
+            <div class="tips"><strong>Tip:</strong> Keep your profile updated so users trust your listings more.</div>
+
+            <h2 id="sell">How to Sell</h2>
+            <p>1. Create an account and log in.<br>2. Go to the <em>Post Ad</em> section.<br>3. Select the correct
+                category.<br>4. Upload clear pictures of your item.<br>5. Write a detailed description and set a fair
+                price.<br>6. Publish your ad.</p>
+            <div class="tips"><strong>Pro Tip:</strong> Ads with high-quality photos and honest descriptions get more
+                buyers.</div>
+
+            <h2 id="buy">How to Buy</h2>
+            <p>1. Use the search bar or category filters to find products.<br>2. Contact the seller via the in-app
+                messaging
+                system.<br>3. Arrange for safe viewing and negotiation.<br>4. Never pay before seeing the product.</p>
+            <div class="tips"><strong>Safety:</strong> Always meet sellers in public places during the day.</div>
+
+            <h2 id="vip">VIP & Boosting</h2>
+            <p><strong>VIP:</strong> Upgrade your account to VIP and enjoy more visibility, trust, and faster
+                sales.<br><br>
+                <strong>Boosting:</strong> Boost your ads to appear at the top of search results for more exposure.
+            </p>
+            <div class="tips"><strong>Note:</strong> VIP and Boosting are optional, but they significantly increase your
+                chances of selling fast.</div>
+
+            <h2 id="security">Security</h2>
+            <p>We take your security seriously. Your password is encrypted, and your personal data is protected.<br><br>
+                - Always log out after use.<br>
+                - Don’t share your password.<br>
+                - Report suspicious ads immediately.</p>
+            <div class="tips"><strong>Reminder:</strong> NeonX will never ask for your password via email.</div>
+
+            <h2 id="faq">Frequently Asked Questions</h2>
+            <p><strong>Q: Is NeonX free?</strong><br>A: Yes, posting ads is free. VIP & Boosting are paid features for
+                extra
+                benefits.</p>
+
+            <h2 id="contact">Contact Support</h2>
+            <p>If you need help, reach out to our support team:<br>
+                📧 Email: support@neonx.com<br>
+                📞 Phone: +123-456-7890<br>
+                ⏰ Available: Mon - Fri, 9am - 6pm</p>
+        </div>
+
+        <script>
+            // Smooth scrolling
+            document.querySelectorAll('.nav a').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    document.querySelectorAll('.nav a').forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        </script>
+</body>
+
+</html>

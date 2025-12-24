@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>VIP Subscription</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
+        }
+
+        button {
+            background: #2d89ef;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h2>VIP Subscription</h2>
+        <p>Get <b>5 VIP Credits</b> for ₦4000</p>
+        <form action="/vips/pays" method="POST">
+            <button type="submit">Buy Now (₦4000)</button>
+        </form>
+        <p style="margin-top:15px;">You currently have <b>
+                <%= user.credit %>
+            </b> VIP credits.</p>
+    </div>
+</body>
+
+</html>

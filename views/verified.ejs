@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edsam Agents - VIP Payment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            display: flex;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+        }
+
+        .sidebar .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            color: #2563eb;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav a {
+            padding: .7rem 1rem;
+            border-radius: .5rem;
+            font-size: .95rem;
+            transition: .3s;
+            color: #333;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .user-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: .75rem;
+            text-align: center;
+            color: #333;
+        }
+
+        .user-box img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: .5rem;
+        }
+
+        /* Main */
+        .main {
+            margin-left: 250px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* VIP Card */
+        .payment-card {
+            max-width: 500px;
+            background: linear-gradient(135deg, #facc15, #f97316);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(250, 204, 21, 0.6);
+            text-align: center;
+            animation: glow 3s infinite;
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                box-shadow: 0 10px 30px rgba(250, 204, 21, 0.6);
+            }
+
+            50% {
+                box-shadow: 0 15px 45px rgba(250, 204, 21, 0.9);
+            }
+        }
+
+        .vip-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .payment-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: .5rem;
+            color: #111;
+        }
+
+        .price-tag {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            color: #1e293b;
+        }
+
+        ul {
+            list-style: none;
+            margin: 1.5rem 0;
+            text-align: left;
+            color: #111;
+        }
+
+        ul li {
+            margin: .5rem 0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        ul li::before {
+            content: "✔️";
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #111;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 9999px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all .3s ease;
+        }
+
+        button:hover {
+            background: #1e40af;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.active {
+                left: 0;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 1rem;
+            }
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div>
+            <div class="logo">Edsam Agents</div>
+            <nav class="nav">
+                <a href="/dashboard">Homepage</a>
+                <a href="/profile">Dashboard</a>
+                <a href="/sell" class="active">Add Listing</a>
+                <a href="/inbox">Messages</a>
+                <a href="/user">Profile</a>
+                <a href="/freinds">My Freinds</a>
+                <a href="saved">Saved-ads</a>
+                <a href="/logout" onclick="return confirmDelete(event)">Logout</a>
+            </nav>
+        </div>
+        <div class="user-box">
+            <img src="/team.png" alt="User" />
+            <div><strong>
+                    <%=user.username%>
+                        <%=user.country%>
+                </strong></div>
+            <small>Premium Seller</small>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+        <div class="payment-card">
+            <div class="vip-icon">👑</div>
+            <h2>Pay for VIP</h2>
+            <div class="price-tag">
+                <%if(user.country=='nigeria' ){%>
+                    ₦700
+                    <%}%>
+                        <%if(user.country=='ghana' ){%>
+                            ₵7
+                            <%}%>
+            </div>
+            <ul>
+                <li>Boost your listing visibility ✨</li>
+                <li>Stand out with VIP badge 👑</li>
+                <li>1 Exclusive Premium Post 🚀</li>
+            </ul>
+            <form action="/pay" method="POST">
+                <label for="email">Email Address</label>
+                <input type="email" name="email" id="email" required>
+                <button type="submit">
+                    <%if(user.country=='nigeria' ){%>
+                        Pay ₦700 & Post VIP
+                        <%}%>
+                            <%if(user.country=='ghana' ){%>
+                                Pay ₵7 & Post VIP
+                                <%}%>
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const sidebar = document.querySelector('.sidebar');
+        function confirmDelete(event) {
+            if (!confirm("⚠️ Are you sure you want to log out?")) {
+                event.preventDefault();
+                return false;
+            }
+            return true;
+        }
+    </script>
+</body>
+
+</html>
