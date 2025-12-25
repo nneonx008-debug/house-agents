@@ -1,9 +1,7 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+require('dotenv').config();
 const Freinds = require('./models/freinds');
 const path = require('path');
 const fs = require('fs');
@@ -213,7 +211,7 @@ function calculateRating(adCount) {
 app.get('/fashion' , isAuthenticated , async(req,res) => {
   const user = await User.findById(req.session.userId);
   res.render('fashion' ,{
-        country: user.country,
+        country: user.country.toLowerCase(),
     user
   });
 })
@@ -248,7 +246,7 @@ app.get('/free' , isAuthenticated , async(req,res) => {
 app.get('/houses'  ,isAuthenticated , async(req,res) => {
   const user = await User.findById(req.session.userId)  ;
   res.render('sell' ,{
-        country: user.country,
+        country: user.country.toLowerCase(),
     user
   })
 })
@@ -331,7 +329,7 @@ app.get('/property/:category/:id', isAuthenticated , async (req, res) => {
 app.get('/furnitures' , isAuthenticated , async(req,res) => {
   const user = await User.findById(req.session.userId) 
   res.render('furniture',{
-        country: user.country,
+        country: user.country.toLowerCase(),
     user
   });
 })
@@ -345,7 +343,7 @@ app.get('/vehicle/:id' , isAuthenticated , async(req,res)  => {
 app.get('/appliances' , isAuthenticated ,async (req,res) => {
   const user  =await User.findById(req.session.userId);
   res.render('appliance' ,{ 
-        country: user.country,
+        country: user.country.toLowerCase(),
     user
   });
 })
@@ -842,9 +840,9 @@ app.get("/dashboard", isAuthenticated, async (req, res) => {
 
     /* --- LOCATION --- */
     if (location) {
-      const loc = location;
+      const loc = location.toLowerCase();
       filteredListings = filteredListings.filter((list) =>
-        (list.location || "")includes(loc)
+        (list.location || "").toLowerCase().includes(loc)
       );
     }
 
