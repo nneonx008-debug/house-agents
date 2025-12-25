@@ -2,21 +2,25 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
+  username: { type: String, required: true },
+  country:{type:String , required: true  }  ,
+  state: {type:String , required: true} , 
   email:    { type: String, required: true, unique: true },
   password: { type: String, required: true },
   image:    { type: String } ,// store filename of uploaded image
   credit: {type :Number , default:0},
+  frenzy:{type:Number ,default:0},
   adCount:  { type: Number, default: 0 }, // ✅ new field
+  customer:{type : Number , default : 0}  ,
   rating : {
     type:Number , 
+
     default : 0
   },
     savedAds: [
     {
       adId: String,
       category: String,
-      bgimg: String,
       title: String,
       price: String,
       location: String,
