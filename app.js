@@ -1258,6 +1258,32 @@ await Message.updateMany(
 
   res.render('chat', { otherUser, user  ,messages, loggedInUser , profileUser });
 });
+app.get('/chat/each/:id/:prop/:category', isAuthenticated, async (req, res) => {
+  const otherUser = await User.findById(req.params.id);
+  const prop = req.params.prop    ;
+   const category  =  req.params.category ; 
+  const profileUser = await User.findById(req.session.userId);
+  const user = await User.findById(req.session.userId)
+  if (!otherUser) return res.status(404).send('User not found');
+
+  const messages = await Message.find({
+    $or: [
+      { sender: req.session.userId, receiver: req.params.id },
+      { sender: req.params.id, receiver: req.session.userId }
+    ]
+  })
+  .sort({ createdAt: 1 })
+  .populate('sender', 'username email');
+await Message.updateMany(
+  { receiver: req.session.userId, isRead: false },
+  { $set: { isRead: true  } }
+);
+
+
+  const loggedInUser = await User.findById(req.session.userId);
+
+  res.redirect(`/property/${category}/${id}`);
+});
 app.get('/chat/feedback/:id', isAuthenticated, async (req, res) => {
   const otherUser = await User.findById(req.params.id);
   const profileUser = await User.findById(req.session.userId);
