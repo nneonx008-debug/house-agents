@@ -13,11 +13,11 @@
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
         }
-
-
-
-
-
+    
+    
+    
+    
+    
         /* Sidebar */
         .sidebar {
             width: 250px;
@@ -32,69 +32,51 @@
             bottom: 0;
             overflow-y: auto;
         }
-
+    
         .sidebar .logo img {
             width: 30%;
             margin-bottom: 2rem;
         }
-
+    
         .nav {
             display: flex;
             flex-direction: column;
             gap: 1rem;
         }
-
+    
         .nav a {
             padding: 0.7rem 1rem;
             border-radius: 0.5rem;
             font-size: 0.95rem;
             transition: 0.3s;
         }
-
+    
         .nav a:hover,
         .nav a.active {
             background: #2563eb;
             color: #fff;
         }
-
+    
         .user-box {
             background: #f1f5f9;
             padding: 1rem;
             border-radius: 0.75rem;
             text-align: center;
         }
-
-
-
+    
+    
+    
         .user-box img {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             margin-bottom: 0.5rem;
         }
+    
+    
+    
 
-
-
-
-        @media(max-width: 768px) {
-            .main {
-                margin-left: 0;
-                padding: 1rem;
-            }
-
-            .topbar {
-                left: 0;
-                padding: 0 15px;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .sidebar {
-                display: none;
-            }
-        }
+    
     </style>
     <style>
         * {
@@ -257,7 +239,8 @@
         .message {
             max-width: 70%;
             padding: 12px 16px;
-            border-radius: 20px;
+            border-radius: 20px; 
+            margin-bottom: 55px;
             word-wrap: break-word;
             font-size: 0.95rem;
         }
@@ -279,7 +262,10 @@
 
         /* Chat actions */
         .chat-actions {
+            position: fixed;
+            bottom: 0px;
             display: flex;
+            width: 100%;
             align-items: center;
             gap: 10px;
             padding: 12px 15px;
@@ -359,60 +345,60 @@
                 <a href="/inbox" class="active">Messages</a>
                 <a href="/user">Profile</a>
                 <a href="/freinds">My Friends</a>
-                <a href="/saved">Saved Ads</a>
+<a href="/saved">Saved Ads</a>
                 <a href="/logout" onclick="return confirm('Logout?')">Logout</a>
             </nav>
         </div>
-        <style>
-            .profile-avatar {
-                width: 56px;
-                height: 56px;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.4rem;
-                font-weight: 600;
-                color: #fff;
-                margin: 0 auto 0.5rem;
-                user-select: none;
-            }
-        </style>
-        <div class="user-box">
-            <div class="profile-avatar" data-name="<%= user.username %>">
-                <%= user.username.charAt(0).toUpperCase() %>
-            </div>
-            <strong>
-                <%= user.username %>
-            </strong>
-            <small>Premium Seller</small>
+    <style>
+        .profile-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+            margin: 0 auto 0.5rem;
+            user-select: none;
+        }
+    </style>
+    <div class="user-box">
+        <div class="profile-avatar" data-name="<%= user.username %>">
+            <%= user.username.charAt(0).toUpperCase() %>
         </div>
-        <script>
-            function getAvatarColor(name) {
-                const colors = [
-                    "#1a73e8", // Google blue
-                    "#34a853", // Google green
-                    "#fbbc05", // Google yellow
-                    "#ea4335", // Google red
-                    "#9334e6", // purple
-                    "#f06292", // pink
-                    "#00acc1", // cyan
-                    "#5c6bc0"  // indigo
-                ];
+        <strong>
+            <%= user.username %>
+        </strong>
+        <small>Premium Seller</small>
+    </div>
+    <script>
+        function getAvatarColor(name) {
+            const colors = [
+                "#1a73e8", // Google blue
+                "#34a853", // Google green
+                "#fbbc05", // Google yellow
+                "#ea4335", // Google red
+                "#9334e6", // purple
+                "#f06292", // pink
+                "#00acc1", // cyan
+                "#5c6bc0"  // indigo
+            ];
 
-                let hash = 0;
-                for (let i = 0; i < name.length; i++) {
-                    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-                }
-
-                return colors[Math.abs(hash) % colors.length];
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) {
+                hash = name.charCodeAt(i) + ((hash << 5) - hash);
             }
 
-            document.querySelectorAll(".profile-avatar").forEach(el => {
-                const name = el.dataset.name || "U";
-                el.style.backgroundColor = getAvatarColor(name);
-            });
-        </script>
+            return colors[Math.abs(hash) % colors.length];
+        }
+
+        document.querySelectorAll(".profile-avatar").forEach(el => {
+            const name = el.dataset.name || "U";
+            el.style.backgroundColor = getAvatarColor(name);
+        });
+    </script>
     </aside>
 
     <!-- Overlay -->
@@ -423,185 +409,187 @@
         <div class="hamburger" id="hamburger">
             <span></span><span></span><span></span>
         </div>
-        <img src="/chat.png" alt="">
 
-        <h1>Chat Box</h1>
-        <style>
-            .boost-btn {
-                display: inline-block;
-                margin-top: 1rem;
-                padding: 0.8rem 1.5rem;
-                background: #f59e0b;
-                color: #fff;
-                font-weight: 600;
-                border: none;
-                border-radius: 0.6rem;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
+        <div class="chat-user you">
+            <div class="user-text right">
+                <div class="fx">
 
-            .boost-btn:hover {
-                background: #d97706;
-                transform: scale(1.05);
-            }
+                    <div class="avatar small" data-name="<%= otherUser.username %>">
+                        <span>
+                            <a href="/seller/<%=otherUser.email%>/<%=otherUser._id%>/listings">
+                                <%= otherUser.email.charAt(0).toUpperCase() %>
+                            </a>
+                        </span>
+                    </div>
+                    <div class="nx">
+                        <%=otherUser.username%>
+                    </div>
+                </div>
+                
+                <div>
+                    <span id="liveStatus" class="offline">● Offline</span>
+                    <span id="typingStatus" style="display:none;">Typing…</span>
+                </div>
+            </div>
+        </div>
+                        <style>
+                            .boost-btn {
+                                display: inline-block;
+                                margin-top: 1rem;
+                                padding: 0.8rem 1.5rem;
+                                background: #2563eb;
+                                color: #fff;
+                                border: 2px solid #fff;
+                                text-transform: capitalize;
+                                font-weight: 600;
+                                border-radius: 0.6rem;
+                                cursor: pointer;
+                                transition: all 0.3s ease;
+                            }
+                        
+                            .boost-btn:hover {
+                                background: #fff;
+                                color: #2563eb;
+                                transition: 2s ease-in;
+                                transform: scale(1.05);
+                            }
+                            .boost-btn:active{
+                                transition: 0s ease-out;
+                            }
+                            #liveStatus {
+    margin-left: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
 
-            #liveStatus {
-                margin-left: 10px;
-                font-size: 0.85rem;
-                font-weight: 600;
-            }
+#liveStatus.online {
+    color: yello; /* green */
+}
 
-            #liveStatus.online {
-                color: #16a34a;
-                /* green */
-            }
+#liveStatus.offline {
+    color: rgb(255, 66, 66); /* gray */
+}
+.nx{
+    margin-top: 7px;
+    padding-left: 10px;
+}
 
-            #liveStatus.offline {
-                color: #6b7280;
-                /* gray */
-            }
-        </style>
-        <button type="submit" class="boost-btn"><a href="/sell">sell</a></button>
+                        </style>
+                        <button type="submit" class="boost-btn" onclick="goBack()">go back</button>
     </div>
+            <script>
+      
+                function goBack() {
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.location.href = "index.html"; // fallback page
+                    }
+                }
+            </script>
 
     <!-- Main -->
     <main class="main">
         <style>
             .split-header {
-                display: grid;
-                grid-template-columns: 1fr auto 1fr;
-                align-items: center;
-                padding: 12px 15px;
-            }
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 12px 15px;
+}
+.fx{
+    display: flex;
+}
+.chat-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-            .chat-user {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
+.chat-user.you {
+  justify-content: flex-start;
+}
 
-            .chat-user.you {
-                justify-content: flex-start;
-            }
+.chat-user.other {
+  justify-content: flex-end;
+}
 
-            .chat-user.other {
-                justify-content: flex-end;
-            }
+.chat-center {
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #6b7280;
+}
 
-            .chat-center {
-                text-align: center;
-                font-weight: 600;
-                font-size: 0.95rem;
-                color: #6b7280;
-            }
+.user-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+}
 
-            .user-text {
-                display: flex;
-                flex-direction: column;
-                font-size: 0.85rem;
-            }
+.user-text.right {
+  text-align: right;
+}
 
-            .user-text.right {
-                text-align: right;
-            }
+#typingStatus {
+  color: white;
+    margin-bottom: 1px;
+  font-size: 0.75rem;
+  margin-left: 6px;
+}
+.avatar.small {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
 
-            #typingStatus {
-                color: #2563eb;
-                font-size: 0.75rem;
-                margin-left: 6px;
-            }
+</style>
 
-            .avatar.small {
-                width: 36px;
-                height: 36px;
-                border-radius: 50%;
-                background: #2563eb;
-                color: #fff;
-                font-weight: 700;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 0.9rem;
-            }
-        </style>
-        <div class="chat-header split-header">
+<script>
+    function stringToColor(str) {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const hue = hash % 360;
+        return `hsl(${hue}, 65%, 45%)`;
+    }
 
-            <!-- other user -->
-            <div class="chat-user you">
-                <div class="user-text right">
-
-                    <div>
-                        <span id="liveStatus" class="offline">●Offline</span>
-                        <span id="typingStatus" style="display:none;">Typing…</span>
-                    </div>
-                </div>
-                <div class="avatar small" data-name="<%= otherUser.username %>">
-                    <span>
-                        <a href="/seller/<%=otherUser.email%>/<%=otherUser._id%>/listings">
-                            <%= otherUser.username.charAt(0).toUpperCase() %>
-                        </a>
-                    </span>
-                </div>
-            </div>
-
-            <!-- CENTER -->
-            <div class="chat-center">
-                <span class="chat-title">Chat</span>
-            </div>
-
-            <!-- you -->
-            <div class="chat-user other">
-                <div class="avatar small" data-name="<%= user.username %>">
-                    <span>
-                        <%= user.username.charAt(0).toUpperCase() %>
-                    </span>
-                </div>
-                <div class="user-text">
-                    <strong>You</strong>
-                </div>
-            </div>
-
-        </div>
-        <script>
-            function stringToColor(str) {
-                let hash = 0;
-                for (let i = 0; i < str.length; i++) {
-                    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-                }
-                const hue = hash % 360;
-                return `hsl(${hue}, 65%, 45%)`;
-            }
-
-            document.querySelectorAll(".avatar").forEach(a => {
-                const name = a.dataset.name || "X";
-                a.style.background = stringToColor(name);
-            });
-        </script>
+    document.querySelectorAll(".avatar").forEach(a => {
+        const name = a.dataset.name || "X";
+        a.style.background = stringToColor(name);
+    });
+</script>
 
 
 
 
         <div id="messages">
             <style>
-                .hideout {
+                .hideout{
                     display: none;
                 }
             </style>
             <% messages.forEach(msg=> { %>
-                <%if(msg.isfeedback==true){%>
-                    <div
-                        class="hideout message <%= msg.sender._id.toString() === user._id.toString() ? 'sent' : 'received' %>">
-                        <%= msg.content %>
-                    </div>
-                    <%}%>
-                        <%if(msg.isfeedback==false){%>
-                            <div
-                                class="message <%= msg.sender._id.toString() === user._id.toString() ? 'sent' : 'received' %>">
-
-                                <%= msg.content %>
-                            </div>
-                            <%}%>
-                                <% }) %>
+                <%if(msg.isfeedback == true){%>
+                        <div class="hideout message <%= msg.sender._id.toString() === user._id.toString() ? 'sent' : 'received' %>">
+                            <%= msg.content %>
+                        </div>
+                <%}%>
+                <%if(msg.isfeedback == false){%>
+                        <div class="message <%= msg.sender._id.toString() === user._id.toString() ? 'sent' : 'received' %>">
+                            
+                            <%= msg.content %>
+                        </div>
+                <%}%>
+                <% }) %>
         </div>
 
         <div class="chat-actions">
@@ -611,130 +599,130 @@
             </form>
         </div>
     </main>
-    <!-- put near bottom of chat.ejs, before </body> -->
-    <script src="/socket.io/socket.io.js"></script>
+<!-- put near bottom of chat.ejs, before </body> -->
+<script src="/socket.io/socket.io.js"></script>
 
-    <script>
-        // ======================
-        // INIT
-        // ======================
-        const socket = io();
+<script>
+    // ======================
+    // INIT
+    // ======================
+    const socket = io();
 
-        const myUserId = "<%= user._id.toString() %>";
-        const otherUserId = "<%= otherUser._id.toString() %>";
+    const myUserId = "<%= user._id.toString() %>";
+    const otherUserId = "<%= otherUser._id.toString() %>";
 
-        const messagesDiv = document.getElementById("messages");
-        const form = document.getElementById("chatForm");
-        const input = document.getElementById("content");
-        const typingStatus = document.getElementById("typingStatus");
-        const liveStatus = document.getElementById("liveStatus");
+    const messagesDiv = document.getElementById("messages");
+    const form = document.getElementById("chatForm");
+    const input = document.getElementById("content");
+    const typingStatus = document.getElementById("typingStatus");
+    const liveStatus = document.getElementById("liveStatus");
 
-        let typingTimeout;
+    let typingTimeout;
 
-        // ======================
-        // JOIN ROOM
-        // ======================
-        socket.emit("join", { userId: myUserId });
+    // ======================
+    // JOIN ROOM
+    // ======================
+    socket.emit("join", { userId: myUserId });
 
-        // ======================
-        // ONLINE STATUS
-        // ======================
-        socket.on("online-users", (users) => {
-            if (users.includes(otherUserId)) {
-                liveStatus.textContent = "● Online";
-                liveStatus.classList.add("online");
-                liveStatus.classList.remove("offline");
-            } else {
-                liveStatus.textContent = "● Offline";
-                liveStatus.classList.add("offline");
-                liveStatus.classList.remove("online");
-            }
+    // ======================
+    // ONLINE STATUS
+    // ======================
+    socket.on("online-users", (users) => {
+        if (users.includes(otherUserId)) {
+            liveStatus.textContent = "● Online";
+            liveStatus.classList.add("online");
+            liveStatus.classList.remove("offline");
+        } else {
+            liveStatus.textContent = "● Offline";
+            liveStatus.classList.add("offline");
+            liveStatus.classList.remove("online");
+        }
+    });
+
+    // ======================
+    // RECEIVE MESSAGE
+    // ======================
+    socket.on("newMessage", (msg) => {
+        const node = document.createElement("div");
+        const isSent = msg.sender._id === myUserId;
+
+        node.className = "message " + (isSent ? "sent" : "received");
+        node.textContent = msg.content;
+
+        messagesDiv.appendChild(node);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+
+    // ======================
+    // SEND MESSAGE
+    // ======================
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const content = input.value.trim();
+        if (!content) return;
+
+        socket.emit("chatMessage", {
+            receiverId: otherUserId,
+            content,
         });
 
-        // ======================
-        // RECEIVE MESSAGE
-        // ======================
-        socket.on("newMessage", (msg) => {
-            const node = document.createElement("div");
-            const isSent = msg.sender._id === myUserId;
+        input.value = "";
+        socket.emit("stopTyping", { receiverId: otherUserId });
+    });
 
-            node.className = "message " + (isSent ? "sent" : "received");
-            node.textContent = msg.content;
+    // ======================
+    // TYPING INDICATOR
+    // ======================
+    input.addEventListener("input", () => {
+        socket.emit("typing", { receiverId: otherUserId });
 
-            messagesDiv.appendChild(node);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        });
-
-        // ======================
-        // SEND MESSAGE
-        // ======================
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            const content = input.value.trim();
-            if (!content) return;
-
-            socket.emit("chatMessage", {
-                receiverId: otherUserId,
-                content,
-            });
-
-            input.value = "";
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
             socket.emit("stopTyping", { receiverId: otherUserId });
-        });
+        }, 1000);
+    });
 
-        // ======================
-        // TYPING INDICATOR
-        // ======================
-        input.addEventListener("input", () => {
-            socket.emit("typing", { receiverId: otherUserId });
+    socket.on("userTyping", ({ userId }) => {
+        if (userId === otherUserId) {
+            typingStatus.style.display = "block";
+        }
+    });
 
-            clearTimeout(typingTimeout);
-            typingTimeout = setTimeout(() => {
-                socket.emit("stopTyping", { receiverId: otherUserId });
-            }, 1000);
-        });
+    socket.on("userStopTyping", ({ userId }) => {
+        if (userId === otherUserId) {
+            typingStatus.style.display = "none";
+        }
+    });
 
-        socket.on("userTyping", ({ userId }) => {
-            if (userId === otherUserId) {
-                typingStatus.style.display = "block";
-            }
-        });
+    // ======================
+    // DEBUG
+    // ======================
+    socket.on("connect", () => {
+        console.log("✅ socket connected:", socket.id);
+    });
+            const hamburger = document.getElementById("hamburger");
+                const sidebar = document.getElementById("sidebar");
+                const overlay = document.getElementById("overlay");
 
-        socket.on("userStopTyping", ({ userId }) => {
-            if (userId === otherUserId) {
-                typingStatus.style.display = "none";
-            }
-        });
+                // Toggle sidebar
+                hamburger.addEventListener("click", () => {
+                    sidebar.classList.toggle("show");
+                    overlay.classList.toggle("show");
+                });
 
-        // ======================
-        // DEBUG
-        // ======================
-        socket.on("connect", () => {
-            console.log("✅ socket connected:", socket.id);
-        });
-        const hamburger = document.getElementById("hamburger");
-        const sidebar = document.getElementById("sidebar");
-        const overlay = document.getElementById("overlay");
+                // Close sidebar when overlay is clicked
+                overlay.addEventListener("click", () => {
+                    sidebar.classList.remove("show");
+                    overlay.classList.remove("show");
+                });
 
-        // Toggle sidebar
-        hamburger.addEventListener("click", () => {
-            sidebar.classList.toggle("show");
-            overlay.classList.toggle("show");
-        });
-
-        // Close sidebar when overlay is clicked
-        overlay.addEventListener("click", () => {
-            sidebar.classList.remove("show");
-            overlay.classList.remove("show");
-        });
-
-        // Auto scroll to bottom
-        window.onload = function () {
-            const messagesDiv = document.getElementById("messages");
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        };
-    </script>
+                // Auto scroll to bottom
+                window.onload = function () {
+                    const messagesDiv = document.getElementById("messages");
+                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                };
+</script>
 
 </body>
 
