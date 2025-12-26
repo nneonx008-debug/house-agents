@@ -1482,14 +1482,14 @@
                                       <div class="property-section">
                                         <!-- Images -->
                                         <div class="images">
-                                          <img src="/<%= home.bgimg %>" class="main-image" alt="Main Image"
+                                          <img src="<%= home.bgimg %>" class="main-image" alt="Main Image"
                                             loading="lazy">
                                           <span>📸 More Images</span>
                                           <div class="thumbnails">
 
                                             <% ['bgimg','extraimg','secondimg','thirdimg'].forEach(img=> { %>
                                               <% if(home[img]){ %>
-                                                <img src="/<%=home[img]%>" alt="Thumbnail" loading="lazy">
+                                                <img src="<%=home[img]%>" alt="Thumbnail" loading="lazy">
                                                 <% } %>
                                                   <% }) %>
                                           </div>
