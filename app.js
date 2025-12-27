@@ -1231,7 +1231,33 @@ app.get('/inbox', isAuthenticated, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+app.get('/chat/each/:id/:prop/:category', isAuthenticated, async (req, res) => {
+  const otherUser = await User.findById(req.params.id);
+  const prop = req.params.prop    ;
+  const id  = req.params.id ;  
+   const category  =  req.params.category ; 
+  const profileUser = await User.findById(req.session.userId);
+  const user = await User.findById(req.session.userId)
+  if (!otherUser) return res.status(404).send('User not found');
 
+  const messages = await Message.find({
+    $or: [
+      { sender: req.session.userId, receiver: req.params.id },
+      { sender: req.params.id, receiver: req.session.userId }
+    ]
+  })
+  .sort({ createdAt: 1 })
+  .populate('sender', 'username email');
+await Message.updateMany(
+  { receiver: req.session.userId, isRead: false },
+  { $set: { isRead: true  } }
+);
+
+
+  const loggedInUser = await User.findById(req.session.userId);
+
+  res.redirect(`/property/${category}/${prop}`);
+});
 // Show chat with a specific user
 app.get('/chat/:id', isAuthenticated, async (req, res) => {
   const otherUser = await User.findById(req.params.id);
