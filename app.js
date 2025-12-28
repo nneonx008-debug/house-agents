@@ -188,7 +188,7 @@ app.set('views', path.join(__dirname, 'views'));
 // server.js (or app.js)
 
 // MongoDB
-mongoose.connect('mongodb+srv://test:test1234@cluster0.sj0rfog.mongodb.net/?appName=test', {
+mongoose.connect('mongodb+srv://test:test1234@cluster0.sj0rfog.mongodb.net/?appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => console.log('✅ MongoDB connected'))
