@@ -1317,7 +1317,7 @@
                         width="55%" alt=""></a>
                 <input type="text" id="searchInput" class="filter-input"
                     placeholder="🔍 Search ads, locations, areas, local govt..." value="<%= search || '' %>"
-                    onkeyup="if(event.key==='Enter') applyFilters()" />
+                    onChange="applyFilters()" />
                 <div id="searchSuggestions" class="search-suggestions"></div>
 
 
