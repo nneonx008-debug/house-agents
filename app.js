@@ -359,61 +359,76 @@ app.post('/add-house', isAuthenticated, upload.fields([
     const userId = req.session.userId;
     const user = await User.findById(userId);
 
-    if (!user) {
-      return res.status(400).send("User not found");
-    }
+    if (!user) return res.status(400).send("User not found");
 
-    // Create house normally
+    // Extract image URLs safely from Cloudinary
+    const bgimg = req.files['bgimg'] ? req.files['bgimg'][0].path : null;
+    const extraimg = req.files['extraimg'] ? req.files['extraimg'][0].path : null;
+    const secondimg = req.files['secondimg'] ? req.files['secondimg'][0].path : null;
+    const thirdimg = req.files['thirdimg'] ? req.files['thirdimg'][0].path : null;
+
+    // Log images for debugging
+    console.log("Uploaded images:", { bgimg, extraimg, secondimg, thirdimg });
+
+    // Create house document
     const house = new Houses({
       title: req.body.title,
-      specific :req.body.specific ,
+      specific: req.body.specific,
       userId: userId,
       description: req.body.description,
-      bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null,
-      extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null,
-      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null,
-      thirdimg: req.files['thirdimg'] ? req.files['thirdimg'][0].path : null,
+      bgimg,
+      extraimg,
+      secondimg,
+      thirdimg,
       baths: req.body.baths,
       beds: req.body.beds,
-      country:user.country ,
-      category:"Houses"  ,
+      country: user.country,
+      category: "Houses",
       location: req.body.location,
       phonenumber: req.body.phonenumber,
       price: req.body.price
     });
-        // ✅ update user adCount and rating
+
+    // Update user adCount and rating
     user.adCount += 1;
     user.rating = calculateRating(user.adCount);
-    await user.save();
-    // Check if user has VIP credit
+
+    // VIP credit check
     if (user.credit && user.credit > 0) {
-      house.VIP = true;              // make this house VIP
-      user.credit -= 1;           // reduce their VIP credit
-      await user.save();
+      house.VIP = true;
+      user.credit -= 1;
     }
 
+    await user.save();
     await house.save();
+
+    // Mirror listing into AllListing collection
     const all = new AllListing({
       refId: house._id,
-            country:user.country ,
-
+      country: user.country,
       category: "Houses",
-        location:house.location ,
-
-      bgimg: house.bgimg , 
-      title:house.title , 
-      price:house.price , 
-      VIP: house.VIP || false   // mirror VIP into AllListing
+      location: house.location,
+      bgimg: house.bgimg,
+      title: house.title,
+      price: house.price,
+      VIP: house.VIP || false
     });
-    await all.save()
+
+    await all.save();
+
+    // Success
+    console.log("✅ House added:", {
+      title: house.title,
+      user: user.username || user.email,
+      images: { bgimg, extraimg, secondimg, thirdimg }
+    });
 
     res.redirect('/profile');
+
   } catch (err) {
-  console.error(err);
-  res.status(500).render("error", {
-    message: "Something went wrong. Please try again."
-  });
-}
+    console.error("❌ /add-house error:", err);
+    res.status(500).render("error", { message: "Something went wrong. Please try again." });
+  }
 });
 
 app.post('/sell-vehicle', isAuthenticated, upload.fields([
