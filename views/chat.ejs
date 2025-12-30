@@ -177,35 +177,111 @@
             display: block;
         }
 
-        /* Topbar */
-        .topbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 65px;
-            background: #2563eb;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 200;
-        }
+ /* Topbar */
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 200;
+}
 
-        .hamburger {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            cursor: pointer;
-        }
+/* Left section */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
 
-        .hamburger span {
-            width: 22px;
-            height: 3px;
-            background: #fff;
-            border-radius: 3px;
-        }
+/* Hamburger */
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 22px;
+  height: 2.5px;
+  background: #111827;
+  border-radius: 3px;
+}
+
+/* User info */
+.chat-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.username {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.status {
+  font-size: 0.75rem;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Online / Offline */
+#liveStatus.online {
+  color: #16a34a;
+}
+
+#liveStatus.offline {
+  color: #9ca3af;
+}
+
+#typingStatus {
+  color: #2563eb;
+}
+
+/* Avatar */
+.avatar.small {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Back button */
+.back-btn {
+  background: #f1f5f9;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.back-btn:hover {
+  background: #e5e7eb;
+}
+
 
         /* Main */
         .main {
@@ -240,7 +316,7 @@
             max-width: 70%;
             padding: 12px 16px;
             border-radius: 20px; 
-            margin-bottom: 110px;
+            margin-bottom: 100px;
             word-wrap: break-word;
             font-size: 0.95rem;
         }
@@ -405,78 +481,33 @@
     <div class="overlay" id="overlay"></div>
 
     <!-- Topbar -->
-    <div class="topbar">
+<!-- Topbar -->
+<header class="topbar">
+    <div class="topbar-left">
         <div class="hamburger" id="hamburger">
             <span></span><span></span><span></span>
         </div>
 
-        <div class="chat-user you">
-            <div class="user-text right">
-                <div class="fx">
+        <div class="chat-user">
+            <div class="avatar small" data-name="<%= otherUser.username %>">
+                <%= otherUser.username.charAt(0).toUpperCase() %>
+            </div>
 
-                    <div class="avatar small" data-name="<%= otherUser.username %>">
-                        <span>
-                            <a href="/seller/<%=otherUser.email%>/<%=otherUser._id%>/listings">
-                                <%= otherUser.email.charAt(0).toUpperCase() %>
-                            </a>
-                        </span>
-                    </div>
-                    <div class="nx">
-                        <%=otherUser.username%>
-                    </div>
+            <div class="user-info">
+                <div class="username">
+                    <%= otherUser.username %>
                 </div>
-                
-                <div>
+                <div class="status">
                     <span id="liveStatus" class="offline">● Offline</span>
                     <span id="typingStatus" style="display:none;">Typing…</span>
                 </div>
             </div>
         </div>
-                        <style>
-                            .boost-btn {
-                                display: inline-block;
-                                margin-top: 1rem;
-                                padding: 0.8rem 1.5rem;
-                                background: #2563eb;
-                                color: #fff;
-                                border: 2px solid #fff;
-                                text-transform: capitalize;
-                                font-weight: 600;
-                                border-radius: 0.6rem;
-                                cursor: pointer;
-                                transition: all 0.3s ease;
-                            }
-                        
-                            .boost-btn:hover {
-                                background: #fff;
-                                color: #2563eb;
-                                transition: 2s ease-in;
-                                transform: scale(1.05);
-                            }
-                            .boost-btn:active{
-                                transition: 0s ease-out;
-                            }
-                            #liveStatus {
-    margin-left: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-#liveStatus.online {
-    color: yello; /* green */
-}
-
-#liveStatus.offline {
-    color: rgb(255, 66, 66); /* gray */
-}
-.nx{
-    margin-top: 7px;
-    padding-left: 10px;
-}
-
-                        </style>
-                        <button type="submit" class="boost-btn" onclick="goBack()">go back</button>
     </div>
+
+    <button class="back-btn" onclick="goBack()">Back</button>
+</header>
+
             <script>
       
                 function goBack() {
