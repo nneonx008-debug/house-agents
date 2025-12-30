@@ -376,6 +376,8 @@ app.post('/add-house', isAuthenticated, upload.fields([
       baths: req.body.baths,
       beds: req.body.beds,
       country:user.country ,
+            typo:req.body.typo  ,
+
       category:"Houses"  ,
       location: req.body.location,
       phonenumber: req.body.phonenumber,
