@@ -1105,7 +1105,7 @@ if (callBtn) {
                   <div class="chip-bar">
       <button onclick="goBack()" class="chip active">←
 </button>
-                    <button class="chip" data-transmission="0">home design</button>
+                    <button class="chip" data-transmission="11">digital</button>
 
                     <button class="chip" data-transmission="1">self contain</button>
 
@@ -1423,7 +1423,7 @@ if (callBtn) {
 
           <% ['bgimg','extraimg','secondimg','thirdimg'].forEach(img=> { %>
             <% if(home[img]){ %>
-              <img src="<%= home[img]%>" alt="Thumbnail" loading="lazy">
+              <img src="<%=home[img]%>" alt="Thumbnail" loading="lazy">
               <% } %>
                 <% }) %>
         </div>
@@ -1509,27 +1509,33 @@ if (callBtn) {
       </div>
       <img src="<%= list.bgimg %>" alt="Listing Image">
       <div class="card-content">
+      <div class="features">
         <h3>
+      
           <%= list.title %>
-            <%if(list.category=='Houses' ){%>
-              ( <%=list.typo%> Rooms)
-                <%}%>
-                  <%if(list.category=='Vehicle' ){%>
-                    (<%=list.transmission%> )
-                      <%}%>
-                        <%if(list.category=='Fashion' ){%>
-                          (<%=list.gender%> Fashion)
-                            <%}%>
-                              <%if(list.category=='Appliances' ){%>
-                                (<%=list.condition%> )
-                                  <%}%>
-                                    <%if(list.category=='Devices' ){%>
-                                      (<%=list.condition%> )
-                                        <%}%>
-                                          <%if(list.category=='Furnitures' ){%>
-                                            (<%=list.condition%> )
-                                              <%}%>
         </h3>
+        <span>
+      
+          <%if(list.category=='Houses' ){%>
+            <%=list.typo%>
+              <%}%>
+                <%if(list.category=='Vehicle' ){%>
+                  <%=list.transmission%>
+                    <%}%>
+                      <%if(list.category=='Fashion' ){%>
+                        <%=list.gender%> Fashion
+                          <%}%>
+                            <%if(list.category=='Appliances' ){%>
+                              <%=list.condition%>
+                                <%}%>
+                                  <%if(list.category=='Devices' ){%>
+                                    <%=list.condition%>
+                                      <%}%>
+                                        <%if(list.category=='Furnitures' ){%>
+                                          <%=list.condition%>
+                                            <%}%>
+        </span>
+      </div>
           <%if(list.country=='ghana' ){%>
             <div class="price">₵<%=Number(list.price).toLocaleString()%>
             </div>
@@ -1610,56 +1616,54 @@ if (callBtn) {
                     }
                   }
             </script>
-   <script src="/socket.io/socket.io.js"></script>
-                                        <script>
-                                            const socket = io();
+                        <script src="/socket.io/socket.io.js"></script>
 
-
-
-                                              // Track online users
-                                              const onlineUsers = new Set();
-
-
-
-                                              // ---- SESSION-BASED AUTH ----
-                                              const sessionUserId = socket.request?.session?.userId;
-
-                                              if (sessionUserId) {
-                                                socket.userId = sessionUserId.toString();
-                                                socket.join(socket.userId);
-
-                                                onlineUsers.add(socket.userId);
-                                                io.emit("online-users", Array.from(onlineUsers));
-
-                                                console.log("👤 user joined via session:", socket.userId);
-                                              }
-
-                                              // ---- FALLBACK JOIN ----
-                                              socket.on("join", ({ userId }) => {
-                                                if (!userId) return;
-
-                                                socket.userId = userId.toString();
-                                                socket.join(socket.userId);
-
-                                                onlineUsers.add(socket.userId);
-                                                io.emit("online-users", Array.from(onlineUsers));
-
-                                                console.log(`👤 socket ${socket.id} joined room ${socket.userId}`);
-                                              });
-
-
-                                              // ---- DISCONNECT ----
-                                              socket.on("disconnect", () => {
-                                                if (socket.userId) {
-                                                  onlineUsers.delete(socket.userId);
-                                                  io.emit("online-users", Array.from(onlineUsers));
-                                                }
-
-                                                console.log("❌ socket disconnected:", socket.id, socket.userId);
-                                              });
-                                            
-                                        </script>
 <script>
+        const socket = io();
+
+
+
+          // Track online users
+          const onlineUsers = new Set();
+
+
+
+          // ---- SESSION-BASED AUTH ----
+          const sessionUserId = socket.request?.session?.userId;
+
+          if (sessionUserId) {
+            socket.userId = sessionUserId.toString();
+            socket.join(socket.userId);
+
+            onlineUsers.add(socket.userId);
+            io.emit("online-users", Array.from(onlineUsers));
+
+            console.log("👤 user joined via session:", socket.userId);
+          }
+
+          // ---- FALLBACK JOIN ----
+          socket.on("join", ({ userId }) => {
+            if (!userId) return;
+
+            socket.userId = userId.toString();
+            socket.join(socket.userId);
+
+            onlineUsers.add(socket.userId);
+            io.emit("online-users", Array.from(onlineUsers));
+
+            console.log(`👤 socket ${socket.id} joined room ${socket.userId}`);
+          });
+
+
+          // ---- DISCONNECT ----
+          socket.on("disconnect", () => {
+            if (socket.userId) {
+              onlineUsers.delete(socket.userId);
+              io.emit("online-users", Array.from(onlineUsers));
+            }
+
+            console.log("❌ socket disconnected:", socket.id, socket.userId);
+          });
   const chips = document.querySelectorAll(".chip");
     const cards = document.querySelectorAll("#listingContainer .card");
     const targetSection = document.getElementById("similarListings");
