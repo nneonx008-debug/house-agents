@@ -884,10 +884,15 @@ main
                 .features{
                     margin-top: 3px;
       margin-bottom: 3px;
+      text-transform: capitalize;
+      text-align: left;
                 }
                 .vip-features{
                     margin-top: 3px;
       margin-bottom: 3px;
+            text-align: left;
+
+      text-transform: capitalize;
                 }
                               .vip-features span {
       background: linear-gradient(135deg, #dbb3139f, #d3621286);
@@ -1092,6 +1097,14 @@ main
             </div>
         
             <div class="category-grid">
+                    <a href="/sell" class="cat-card house">
+                      <span>➕</span>
+                      <p>Post Ads</p>
+                    </a>
+                          <a href="/support" class="cat-card house">
+                            <span>❔</span>
+                            <p>support</p>
+                          </a>
                           <a href="/best-sellers" class="cat-card house">
                             <span>🕵🏻‍♀️</span>
                             <p>Sellers</p>
@@ -1460,7 +1473,7 @@ main
                 <%=list.typo%>
                   <%}%>
                     <%if(list.category=='Vehicle' ){%>
-                      <%=list.transmission%>
+                      <%=list.mileage%>
                         <%}%>
                           <%if(list.category=='Fashion' ){%>
                             <%=list.gender%> Fashion
@@ -1510,7 +1523,7 @@ main
             <% if(list.category){ %>
                 <%=list.category%>
                     <% } else if(list.transmission){ %>
-                        <%=list.transmission%>
+                        <%=list.mileage%>
                             <% } else if(list.typo && list.typo == 'digital product'){ %>
                                 <%=list.typo %>
                                     <% } else if(list.condition){%>
@@ -1540,7 +1553,7 @@ main
      <%=list.typo%>
                             <%}%>
                                 <%if(list.category=='Vehicle' ){%>
-                                  <%=list.transmission%> 
+                                  <%=list.mileage%> 
                                         <%}%>
                                             <%if(list.category=='Fashion' ){%>
                                                 <%=list.gender%> Fashion
@@ -1683,7 +1696,7 @@ main
             
      
             <% } %>    </main>    
-   <script src="/socket.io/socket.io.js"></script>
+            <script src="/socket.io/socket.io.js"></script>
                                         <script>
                                             const socket = io();
 
@@ -1733,6 +1746,7 @@ main
                                             
                                         </script>
       <script>
+
         const panel = document.getElementById("categoryPanel");
         const handle = document.getElementById("categoryHandle");
         const skipBtn = document.getElementById("skipCategories");
