@@ -2138,3 +2138,156 @@ app.post('/propose/:sellerid/:category/:id/:title' , isAuthenticated , async(req
   await msg.save();
   res.redirect(`/property/${category}/${id}`)
 })
+app.get('/edit/:category/:id' , isAuthenticated , async(req,res) => {
+  const {category  , id  }  =req.params ; 
+  let edit;
+  const user = await User.findById(req.session.userId) ;
+  if(category == 'Houses'){
+    edit = await Houses.findById(id) ; 
+  }
+   if(category == 'Vehicle'){
+    edit =  await Vehicle.findById(id)
+  }
+   if(category == 'Devices'){
+    edit = await Devices.findById(id)
+  }
+  if(category == 'Furnitures'){
+    edit = await Furnitures.findById(id)
+  }
+  if(category == 'Appliances'){
+    edit = await Appliances.findById(id) ; 
+  }
+  if(category == 'Fashion'){
+    edit = await Fashion.findById(id) ; 
+  }
+  res.render('edit' ,{ home : edit  , user})
+})
+app.post('/edited/:category/:id' , isAuthenticated , 
+  upload.fields([
+  {name: 'bgimg' , maxCount :1} ,
+  {name : 'extraimg'  ,maxCount :1} , 
+  {name: 'secondimg' , maxCount :1} , 
+  {name:'thirdimg' ,maxCount:1}  
+]),
+  async(req,res) => {
+  const {category , id} = req.params ; 
+  const {title , price , specific  ,location ,description } = req.body  ;
+         const h=await Houses.findById(id)
+       const v=await Vehicle.findById(id)
+      const d=await Devices.findById(id)
+      const f=await Furnitures.findById(id)
+      const a=await Appliances.findById(id) ; 
+      const fa=await Fashion.findById(id) ; 
+
+  let data;
+     if(category == 'Houses'){
+       await Houses.findById(id)
+  }
+     if(category == 'Vehicle'){
+       await Vehicle.findById(id)
+  }
+   if(category == 'Devices'){
+      await Devices.findById(id)
+  }
+  if(category == 'Furnitures'){
+      await Furnitures.findById(id)
+  }
+  if(category == 'Appliances'){
+      await Appliances.findById(id) ; 
+  }
+  if(category == 'Fashion'){
+      await Fashion.findById(id) ; 
+  }
+
+  if(category == 'Houses'){
+     await Houses.findByIdAndUpdate(id , {$set : {
+      title:title || h.title, 
+      price:price || h.price, 
+      description:description || h.description , 
+      location: location  || h.location, 
+      specific:specific || h.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || h.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || h.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || h.extraimg
+
+ 
+
+     }}) ; 
+  }
+   if(category == 'Vehicle'){
+      await Vehicle.findByIdAndUpdate(id , {$set : {
+      title:title || v.title, 
+      price:price || v.price, 
+      description:description || v.description , 
+      location: location  || v.location, 
+      specific:specific || v.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || v.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || v.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || v.extraimg
+
+ 
+
+     }})
+  }
+   if(category == 'Devices'){
+     await Devices.findByIdAndUpdate(id , {$set : {
+      title:title || d.title, 
+      price:price || d.price, 
+      description:description || d.description , 
+      location: location  || d.location, 
+      specific:specific || d.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || d.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || d.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || d.extraimg
+
+ 
+
+     }})
+  }
+  if(category == 'Furnitures'){
+await Furnitures.findByIdAndUpdate(id , {$set : {
+      title:title || f.title, 
+      price:price || f.price, 
+      description:description || f.description , 
+      location: location  || f.location, 
+      specific:specific || f.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || f.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || f.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || f.extraimg
+
+ 
+
+     }})
+  }
+  if(category == 'Appliances'){
+     await Appliances.findByIdAndUpdate(id , {$set : {
+      title:title || a.title, 
+      price:price || a.price, 
+      description:description || a.description , 
+      location: location  || a.location, 
+      specific:specific || a.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || a.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || a.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || a.extraimg
+
+ 
+
+     }}) ; 
+  }
+  if(category == 'Fashion'){
+     await Fashion.findByIdAndUpdate(id , {$set : {
+      title:title || fa.title, 
+      price:price || fa.price, 
+      description:description || fa.description , 
+      location: location  || fa.location, 
+      specific:specific || fa.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || fa.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || fa.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || fa.extraimg
+
+ 
+
+     }}) ; 
+  }
+  res.redirect(`/edit/${category}/${id}`)
+});
