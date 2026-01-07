@@ -1245,14 +1245,14 @@
         <div class="property-section">
             <!-- Images -->
             <div class="images">
-                <img src="/<%= home.bgimg %>" class="main-image" alt="Main Image" loading="lazy">
+                <img src="<%= home.bgimg %>" class="main-image" alt="Main Image" loading="lazy">
                 <span>📸 More Images</span>
                 <div class="thumbnails">
 
                     <% ['bgimg','extraimg','secondimg','thirdimg'].forEach(img=>
                         { %>
                         <% if(home[img]){ %>
-                            <img src="/<%=home[img]%>" alt="Thumbnail" loading="lazy">
+                            <img src="<%=home[img]%>" alt="Thumbnail" loading="lazy">
                             <% } %>
                                 <% }) %>
                 </div>
@@ -1360,7 +1360,7 @@
                                                                     <a href="/home/<%=list.category%>/<%= list._id %>">
                                                                         <div class="badge">
                                                                         </div>
-                                                                        <img src="/<%= list.bgimg %>"
+                                                                        <img src="<%= list.bgimg %>"
                                                                             alt="Listing Image">
                                                                         <div class="card-content">
                                                                             <div class="features">
@@ -1531,5 +1531,6 @@
     </script>
 
 </body>
+
 
 </html>
