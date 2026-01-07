@@ -256,7 +256,117 @@ app.get('/' , (req,res) => {
   res.render('land')
 })
 
+app.get('/home/:category/:id' , async (req, res) => {
+  try {
+    const { category, id } = req.params;
+   
+    let data = null;
+    let moreFunc = null;
 
+    // Get logged-in user
+
+    // Load listing based on category
+    switch (category) {
+      case "Houses":
+        data = await Houses.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Houses.find().sort({ boosting: -1 });
+        break;
+      case "Vehicle":
+        data = await Vehicle.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Vehicle.find().sort({ boosting: -1 });
+        break;
+      case "Devices":
+        data = await Devices.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Devices.find().sort({ boosting: -1 });
+        break;
+      case "Furnitures":
+        data = await Furnitures.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Furnitures.find().sort({ boosting: -1 });
+        break;
+      case "Appliances":
+        data = await Appliances.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Appliances.find().sort({ boosting: -1 });
+        break;
+      case "Fashion":
+        data = await Fashion.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Fashion.find().sort({ boosting: -1 });
+        break;
+      default:
+        return res.status(400).send("Invalid category");
+    }
+
+    if (!data) {
+      return res.status(404).send("Listing not found");
+    }
+
+
+
+    res.render("ghanaone", { home: data,  more: moreFunc});
+
+  }catch (err) {
+  console.error(err);
+  res.status(500).render("error", {
+    message: "Something went wrong. Please try again."
+  });
+}
+});
+app.get('/nig/:category/:id' , async (req, res) => {
+  try {
+    const { category, id } = req.params;
+   
+    let data = null;
+    let moreFunc = null;
+
+    // Get logged-in user
+
+    // Load listing based on category
+    switch (category) {
+      case "Houses":
+        data = await Houses.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Houses.find().sort({ boosting: -1 });
+        break;
+      case "Vehicle":
+        data = await Vehicle.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Vehicle.find().sort({ boosting: -1 });
+        break;
+      case "Devices":
+        data = await Devices.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Devices.find().sort({ boosting: -1 });
+        break;
+      case "Furnitures":
+        data = await Furnitures.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Furnitures.find().sort({ boosting: -1 });
+        break;
+      case "Appliances":
+        data = await Appliances.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Appliances.find().sort({ boosting: -1 });
+        break;
+      case "Fashion":
+        data = await Fashion.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Fashion.find().sort({ boosting: -1 });
+        break;
+      default:
+        return res.status(400).send("Invalid category");
+    }
+
+    if (!data) {
+      return res.status(404).send("Listing not found");
+    }
+
+    // ✅ Now that we have data, we can fetch feedback
+    const feedbacks = await Feedback.find({ sellerId: data.userId._id })
+      .populate("buyerId", "username email")
+      .sort({ createdAt: -1 });
+
+    res.render("nigeriaone", { home: data,  more: moreFunc});
+
+  }catch (err) {
+  console.error(err);
+  res.status(500).render("error", {
+    message: "Something went wrong. Please try again."
+  });
+}
+});
 app.get('/property/:category/:id', isAuthenticated , async (req, res) => {
   try {
     const group = await Freinds.find({userId:req.session.userId}).populate('email')
@@ -918,7 +1028,252 @@ app.get("/dashboard", isAuthenticated, async (req, res) => {
 }
 });
 
+app.get("/ghana", async (req, res) => {
+  try {
 
+    const { sort, category, search, location } = req.query;
+    
+    /* ================= FETCH BASE LISTINGS ================= */
+    const baseListings = await AllListing.find()
+      .lean()
+      .sort({ boosting: -1, createdAt: -1 });
+
+    /* ================= RESOLVE CATEGORY DATA ================= */
+    const collections = {
+      Vehicle,
+      Houses,
+      Devices,
+      Furnitures,
+      Appliances,
+      Fashion,
+    };
+    
+    const resolvedListings = (
+      await Promise.all(
+        baseListings.map(async (item) => {
+          const Model = collections[item.category];
+          if (!Model) return null;
+          
+          const data = await Model.findById(item.refId).lean();
+          return data ? { ...item, ...data } : null;
+        })
+      )
+    ).filter(Boolean);
+
+    /* ================= FILTERING ================= */
+    let filteredListings = [...resolvedListings];
+
+    /* --- CATEGORY --- */
+    if (category) {
+      filteredListings = filteredListings.filter(
+        (list) => list.category === category
+      );
+    }
+    
+    /* --- LOCATION --- */
+    if (location) {
+      const loc = location;
+      filteredListings = filteredListings.filter((list) =>
+        (list.location || "").includes(loc)
+      );
+    }
+
+    /* --- SMART SEARCH (WORD MATCH) --- */
+    if (search) {
+      const words = search
+        .trim()
+        
+        .split(/\s+/)
+        .filter(Boolean);
+
+      filteredListings = filteredListings.filter((list) => {
+        const searchableText = `
+          ${list.title || ""}
+          ${list.location || ""}
+          ${list.category || ""}
+          ${list.specific || ""}
+          ${list.transmission || ""}
+          ${list.gender || ""}
+          ${list.condition || ""}
+                    ${list.beds || ""}
+          ${list.baths || ""}
+
+                    ${list.price || ""}
+       ${list.manufacturer || ""}
+
+                    ${list.fueltype || ""}
+                    ${list.mileage || ""}
+
+
+
+
+
+
+        `;
+
+        return words.some(word => searchableText.includes(word));
+      });
+    }
+
+    /* ================= SORTING ================= */
+    if (sort === "low") {
+      filteredListings.sort((a, b) => (a.price || 0) - (b.price || 0));
+    } else if (sort === "high") {
+      filteredListings.sort((a, b) => (b.price || 0) - (a.price || 0));
+    } else {
+      filteredListings.sort((a, b) => {
+        if ((b.boosting || 0) !== (a.boosting || 0)) {
+          return (b.boosting || 0) - (a.boosting || 0);
+        }
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+    }
+
+    /* ================= VIP SPLIT ================= */
+    const vipListings = filteredListings.filter(list => list.VIP === true);
+    const normalListings = filteredListings.filter(list => !list.VIP);
+    
+    /* ================= RENDER ================= */
+    res.render("ghanahome", {
+      
+      vipListings,
+      normalListings,
+      sort,
+      category,
+      search,
+      location,
+    });
+
+  } catch (err) {
+  console.error(err);
+  res.status(500).render("error", {
+    message: "Something went wrong. Please try again."
+  });
+}
+});
+app.get("/nigeria", async (req, res) => {
+  try {
+
+    const { sort, category, search, location } = req.query;
+    
+    /* ================= FETCH BASE LISTINGS ================= */
+    const baseListings = await AllListing.find()
+      .lean()
+      .sort({ boosting: -1, createdAt: -1 });
+
+    /* ================= RESOLVE CATEGORY DATA ================= */
+    const collections = {
+      Vehicle,
+      Houses,
+      Devices,
+      Furnitures,
+      Appliances,
+      Fashion,
+    };
+    
+    const resolvedListings = (
+      await Promise.all(
+        baseListings.map(async (item) => {
+          const Model = collections[item.category];
+          if (!Model) return null;
+          
+          const data = await Model.findById(item.refId).lean();
+          return data ? { ...item, ...data } : null;
+        })
+      )
+    ).filter(Boolean);
+
+    /* ================= FILTERING ================= */
+    let filteredListings = [...resolvedListings];
+
+    /* --- CATEGORY --- */
+    if (category) {
+      filteredListings = filteredListings.filter(
+        (list) => list.category === category
+      );
+    }
+    
+    /* --- LOCATION --- */
+    if (location) {
+      const loc = location;
+      filteredListings = filteredListings.filter((list) =>
+        (list.location || "").includes(loc)
+      );
+    }
+
+    /* --- SMART SEARCH (WORD MATCH) --- */
+    if (search) {
+      const words = search
+        .trim()
+        
+        .split(/\s+/)
+        .filter(Boolean);
+
+      filteredListings = filteredListings.filter((list) => {
+        const searchableText = `
+          ${list.title || ""}
+          ${list.location || ""}
+          ${list.category || ""}
+          ${list.specific || ""}
+          ${list.transmission || ""}
+          ${list.gender || ""}
+          ${list.condition || ""}
+                    ${list.beds || ""}
+          ${list.baths || ""}
+
+                    ${list.price || ""}
+       ${list.manufacturer || ""}
+
+                    ${list.fueltype || ""}
+                    ${list.mileage || ""}
+
+
+
+
+
+
+        `;
+
+        return words.some(word => searchableText.includes(word));
+      });
+    }
+
+    /* ================= SORTING ================= */
+    if (sort === "low") {
+      filteredListings.sort((a, b) => (a.price || 0) - (b.price || 0));
+    } else if (sort === "high") {
+      filteredListings.sort((a, b) => (b.price || 0) - (a.price || 0));
+    } else {
+      filteredListings.sort((a, b) => {
+        if ((b.boosting || 0) !== (a.boosting || 0)) {
+          return (b.boosting || 0) - (a.boosting || 0);
+        }
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+    }
+
+    /* ================= VIP SPLIT ================= */
+    const vipListings = filteredListings.filter(list => list.VIP === true);
+    const normalListings = filteredListings.filter(list => !list.VIP);
+    
+    /* ================= RENDER ================= */
+    res.render("nigeriahome", {
+      
+      vipListings,
+      normalListings,
+      sort,
+      category,
+      search,
+      location,
+    });
+
+  } catch (err) {
+  console.error(err);
+  res.status(500).render("error", {
+    message: "Something went wrong. Please try again."
+  });
+}
+});
 
 app.get('/vehicle', isAuthenticated, async (req, res) => {
   let listings = await Vehicle.find().sort({createdAt:-1}).populate('userId' , 'username');
