@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeonX - Home</title>
+
+    <meta name="theme-color" content="#2563eb">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* ========== CORE RESET ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", system-ui, sans-serif;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            /* ONLY main scrolls */
+            background: #f9fafb;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #e5e7eb;
+            padding: 1.2rem;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.hide {
+            transform: translateX(-260px);
+        }
+
+        /* ========== TOPBAR ========== */
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 250px;
+            right: 0;
+            height: 65px;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.2rem;
+            z-index: 200;
+        }
+
+        /* ========== MAIN (ONLY SCROLLER) ========== */
+        .main {
+            position: absolute;
+            top: 0;
+            left: 0px;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-top: 65px;
+            /* EXACTLY ONE OFFSET */
+        }
+
+        /* ========== CATEGORY PANEL ========== */
+        .category-panel {
+            background: #fff;
+            margin: 16px;
+            padding: 20px;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .category-panel.hide {
+            display: none;
+        }
+
+        /* ========== CHIP BAR ========== */
+        .chip-wrapper {
+            position: sticky;
+            top: 65px;
+            /* UNDER TOPBAR */
+            z-index: 120;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .chip-bar {
+            display: flex;
+            gap: 12px;
+            padding: 12px 16px;
+            overflow-x: auto;
+        }
+
+        .chip-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ========== GRID ========== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        /* ========== CATEGORY HANDLE ========== */
+        #categoryHandle {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2563eb;
+            color: #fff;
+            padding: 14px 12px;
+            border-radius: 14px 0 0 14px;
+            cursor: grab;
+            z-index: 999;
+        }
+
+        /* ========== MOBILE ========== */
+        @media (max-width: 768px) {
+            .topbar {
+                left: 0;
+            }
+
+            .main {
+                left: 0;
+            }
+
+            .sidebar {
+                transform: translateX(-260px);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+        }
+    </style>
+    <style>
+        /* ================= RESET ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        html,
+        body {
+            width: 100%;
+            max-width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #f9fafb;
+            color: #111;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+            border-radius: 8px;
+        }
+
+        /* ================= SIDEBAR ================= */
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #e5e7eb;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 300;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar.hide {
+            transform: translateX(-260px);
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .nav a {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #444;
+            transition: background 0.25s ease, color 0.25s ease;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .user-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+        /* ================= TOPBAR ================= */
+        .topbar {
+            position: fixed;
+            inset: 0 0 auto 250px;
+            height: 65px;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.2rem;
+            z-index: 200;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 22px;
+            height: 3px;
+            background: #fff;
+            border-radius: 3px;
+        }
+
+        /* ================= MAIN ================= */
+        .main {
+            margin-left: 250px;
+            padding-top: 65px;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-width: calc(100vw - 250px);
+        }
+
+        /* ================= CATEGORY PANEL ================= */
+        .category-panel {
+            background: #fff;
+            padding: 20px;
+            margin: 16px;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transition: transform 0.4s ease, opacity 0.3s ease;
+        }
+
+        .category-panel.hide {
+            transform: translateX(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .category-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        #skipCategories {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #2563eb;
+            font-size: 0.9rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 14px;
+        }
+
+        .cat-card {
+            background: #f8fafc;
+            padding: 18px 10px;
+            border-radius: 14px;
+            text-align: center;
+            font-weight: 500;
+            transition: 0.25s ease;
+        }
+
+        .cat-card span {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .cat-card:hover {
+            background: #2563eb;
+            color: #fff;
+            transform: translateY(-4px);
+        }
+
+        /* Handle */
+        #categoryHandle {
+            position: fixed;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2563eb;
+            color: #fff;
+            padding: 14px 12px;
+            border-radius: 14px 0 0 14px;
+            cursor: grab;
+            z-index: 999;
+            user-select: none;
+        }
+
+        /* ================= FILTER BAR ================= */
+        .chip-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e7eb;
+            overflow: hidden;
+        }
+
+        .chip-bar {
+            display: flex;
+            gap: 12px;
+            padding: 12px 16px;
+            align-items: center;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        .chip-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-input,
+        .filter-select,
+        .chip {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid #d1d5db;
+            background: #fff;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .filter-input {
+            min-width: 220px;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .chip {
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .chip:hover,
+        .chip.active {
+            background: #2563eb;
+            color: #fff;
+            border-color: #2563eb;
+        }
+
+        /* ================= GRID ================= */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+        }
+
+        .card img {
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .price {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .details {
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #2563eb;
+            color: #fff;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        /* ================= VIP ================= */
+        .vip-card {
+            background: linear-gradient(135deg, #facc15, #f97316);
+        }
+
+        /* ================= OVERLAY ================= */
+        #overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 250;
+        }
+
+        #overlay.show {
+            display: block;
+        }
+
+        /* ================= MOBILE ================= */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .sidebar {
+                transform: translateX(-260px);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .topbar {
+                left: 0;
+            }
+
+            .main {
+                margin-left: 0;
+                max-width: 100vw;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+    <style>
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo img {
+            width: 30%;
+            margin-bottom: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav a {
+            padding: 0.7rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .user-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            text-align: center;
+        }
+
+
+
+        .user-box img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+    <style>
+        main a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+            border-radius: 8px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.2rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 300;
+            transition: left 0.3s ease;
+        }
+
+        .sidebar .logo img {
+            width: 40%;
+            margin-bottom: 2rem;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .nav a {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #444;
+            transition: 0.3s;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #2563eb;
+            color: #fff;
+        }
+    </style>
+    <style>
+        /* ================= RESET ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            overflow: hidden;
+            background: #f9fafb;
+            color: #111;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ================= SIDEBAR ================= */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #e5e7eb;
+            padding: 1.2rem;
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform .3s ease;
+        }
+
+        .sidebar.hide {
+            transform: translateX(-260px);
+        }
+
+        .nav a {
+            display: block;
+            padding: .75rem 1rem;
+            border-radius: .5rem;
+            margin-bottom: .4rem;
+        }
+
+        .nav a.active,
+        .nav a:hover {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .user-box {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: .75rem;
+            text-align: center;
+        }
+
+        .user-box img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+        }
+
+        /* ================= TOPBAR ================= */
+        .topbar {
+            position: fixed;
+            left: 250px;
+            right: 0;
+            top: 0;
+            height: 65px;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.2rem;
+            z-index: 150;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 22px;
+            height: 3px;
+            background: #fff;
+            border-radius: 3px;
+        }
+
+        /* ================= MAIN ================= */
+        .main {
+            margin-left: 250px;
+            padding-top: 65px;
+
+            overflow-y: auto;
+        }
+
+        /* ================= FILTER BAR (UPGRADED) ================= */
+        .chip-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 60;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .chip-bar {
+            display: flex;
+            gap: 12px;
+            padding: 12px 16px;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        .chip-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Unified inputs */
+        .filter-input,
+        .filter-select {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid #d1d5db;
+            background: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            min-width: 160px;
+            transition: all 0.25s ease;
+        }
+
+        .filter-input {
+            min-width: 220px;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        /* Search icon feel */
+        .filter-input::placeholder {
+            color: #9ca3af;
+        }
+
+        /* Action chip look */
+        .filter-chip {
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: #f1f5f9;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.25s ease;
+        }
+
+        .filter-chip:hover {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .filter-chip.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        /* Mobile improvement */
+        @media (max-width: 768px) {
+            .chip-bar {
+                padding: 10px;
+            }
+
+            .filter-input {
+                min-width: 180px;
+            }
+        }
+
+
+        /* ================= GRID ================= */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, .08);
+            overflow: hidden;
+            transition: .3s;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 1rem;
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .card .price {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        .card .details {
+            font-size: 0.85rem;
+            color: #555;
+            text-transform: capitalize;
+        }
+
+
+        .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #2563eb;
+            color: #fff;
+            padding: .3rem .6rem;
+            border-radius: .5rem;
+            font-size: .75rem;
+        }
+
+        /* ================= VIP ================= */
+        .vip-card {
+            background: linear-gradient(135deg, #facc15, #f97316);
+        }
+
+        .features {
+            margin-top: 3px;
+            margin-bottom: 3px;
+            text-transform: capitalize;
+            text-align: left;
+        }
+
+        .vip-features {
+            margin-top: 3px;
+            margin-bottom: 3px;
+            text-align: left;
+
+            text-transform: capitalize;
+        }
+
+        .vip-features span {
+            background: linear-gradient(135deg, #dbb3139f, #d3621286);
+            padding: 5px 10px;
+            border-radius: 8px;
+
+            display: inline;
+            font-size: 0.9rem;
+            margin-right: 6px;
+        }
+
+        /* ================= OVERLAY ================= */
+        #overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .5);
+            z-index: 180;
+            display: none;
+        }
+
+        #overlay.show {
+            display: block;
+        }
+
+        /* ================= MOBILE ================= */
+        @media (max-width:768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .sidebar {
+                transform: translateX(-260px);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .topbar {
+                left: 0;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <style>
+        /* Loader */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #f9fafb;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        #loader img {
+            width: 120px;
+            margin-bottom: 15px;
+            animation: pulseLogo 1.5s infinite;
+        }
+
+        .loader-motto {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+
+        .loader-bar {
+            width: 220px;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .loader-progress {
+            width: 0%;
+            height: 100%;
+            background: #2563eb;
+            animation: loadProgress 1s forwards;
+            /* 1 second animation */
+        }
+
+        @keyframes loadProgress {
+            from {
+                width: 0%;
+            }
+
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes pulseLogo {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .warning {
+            color: green;
+
+        }
+    </style>
+    </head>
+    <!-- Loader -->
+    <div id="loader">
+        <img src="/NeonX Logo on Dark Backdrop.png" alt="NeonX Logo">
+        <span class="warning">
+            Neonx is safe, smart and secure market...
+        </span>
+        <br>
+        <h2 class="loader-motto">Loading Property Details...</h2>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
+
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div>
+            <img src="/NeonX Logo on Dark Backdrop.png" width="100">
+            <nav class="nav">
+                <a href="" class="active"> Homepage</a>
+                <a href="/signup"> Dashboard</a>
+                <a href="/signup"> Add Listing</a>
+                <a href="/signup"> Messages</a>
+                <a href="/signup"> Profile</a>
+                <a href="/signup">Saved Ads</a>
+                <a href="/signup">My Friends</a>
+                <a href="/signup" onclick="return confirm('Logout?')"> Logout</a>
+            </nav>
+        </div>
+        <style>
+            .profile-avatar {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: #fff;
+                margin: 0 auto 0.5rem;
+                user-select: none;
+            }
+        </style>
+        <div class="user-box">
+            <div class="profile-avatar" data-name="Nx">
+                Neonx
+            </div>
+            <strong>
+                <a href="/signup">create account</a>
+            </strong>
+            <small>Premium Seller</small>
+        </div>
+
+
+    </aside>
+
+    <div id="overlay"></div>
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+        <div class="hamburger" id="hamburger">
+            <span></span><span></span><span></span>
+        </div>
+        <h2>NeonX</h2>
+        <style>
+            .boost-btn {
+                display: inline-block;
+                margin-top: 1rem;
+                padding: 0.8rem 1.5rem;
+                background: #f59e0b;
+                color: #fff;
+                font-weight: 600;
+                border: none;
+                border-radius: 0.6rem;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .boost-btn:hover {
+                background: #d97706;
+                transform: scale(1.05);
+            }
+        </style>
+        <button type="submit" class="boost-btn"><a href="/signup">sell</a></button>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main">
+        <!-- CATEGORY DISCOVERY (OLX STYLE) -->
+        <div id="categoryPanel" class="category-panel">
+            <div class="category-header">
+                <h3>What are you looking for?</h3>
+                <button id="skipCategories">Skip ✕</button>
+            </div>
+
+            <div class="category-grid">
+                <a href="/signup" class="cat-card house">
+                    <span>➕</span>
+                    <p>Post Ads</p>
+                </a>
+                <a href="/signup" class="cat-card house">
+                    <span>❔</span>
+                    <p>support</p>
+                </a>
+                <a href="/signup" class="cat-card house">
+                    <span>🕵🏻‍♀️</span>
+                    <p>Sellers</p>
+                </a>
+                <a href="/signup" class="cat-card house">
+                    <span>🤝🏻</span>
+                    <p>Buyers</p>
+                </a>
+                <a href="?category=Houses" class="cat-card house">
+                    <span>🏠</span>
+                    <p>Houses</p>
+                </a>
+
+                <a href="?category=Vehicle" class="cat-card vehicle">
+                    <span>🚗</span>
+                    <p>Vehicles</p>
+                </a>
+
+                <a href="?category=Devices" class="cat-card electronics">
+                    <span>💻</span>
+                    <p>Electronics</p>
+                </a>
+
+                <a href="?category=Fashion" class="cat-card fashion">
+                    <span>👕</span>
+                    <p>Fashion</p>
+                </a>
+
+                <a href="?category=Furnitures" class="cat-card furniture">
+                    <span>🛋️</span>
+                    <p>Furniture</p>
+                </a>
+
+                <a href="?category=Appliances" class="cat-card services">
+                    <span>🛠️</span>
+                    <p>Jobs & Services</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- DRAG HANDLE -->
+        <div id="categoryHandle">☰</div>
+        <script>
+            const targetSection = document.getElementById('categoryPanel');
+            const hand = document.getElementById('categoryHandle');
+            console.log(hand)
+            hand.addEventListener('click', function () {
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+                }
+
+            })
+        </script>
+        <!-- STICKY CHIPS -->
+        <div class="chip-wrapper">
+            <div class="chip-bar">
+                <style>
+                    .hed {
+                        border-bottom: 1px solid black;
+                        border-left: none;
+                        border-right: none;
+                        border-top: none;
+                    }
+
+                    .chip {
+                        flex: 0 0 auto;
+                        /* 🔥 VERY IMPORTANT */
+                        padding: 8px 14px;
+                        border-radius: 999px;
+                        border: 1px solid #d1d5db;
+                        background: #fff;
+                        cursor: pointer;
+                        white-space: nowrap;
+                        transition: transform 0.15s ease, background 0.2s ease;
+                    }
+
+                    /* Tap feedback */
+                    .chip:active {
+                        transform: scale(0.95);
+                    }
+
+                    .chip.active {
+                        background: #2563eb;
+                        color: #fff;
+                        border-color: #2563eb;
+                    }
+
+                    /* ===== OLX STYLE CATEGORY PANEL ===== */
+                    .category-panel {
+                        position: relative;
+                        background: #ffffff;
+                        padding: 20px;
+                        margin: 15px;
+                        border-radius: 18px;
+                        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+                        transition: transform 0.4s ease;
+                    }
+
+
+
+                    .category-panel.hide {
+                        transform: translateX(100%);
+                        opacity: 0;
+                        pointer-events: none;
+                    }
+
+                    /* Header */
+                    .category-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 15px;
+                    }
+
+                    .category-header h3 {
+                        font-size: 1.1rem;
+                        font-weight: 600;
+                    }
+
+                    #skipCategories {
+                        background: none;
+                        border: none;
+                        font-size: 0.9rem;
+                        cursor: pointer;
+                        color: #2563eb;
+                    }
+
+                    /* Grid */
+                    .category-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                        gap: 14px;
+                    }
+
+                    /* Cards */
+                    .cat-card {
+                        background: #f8fafc;
+                        border-radius: 14px;
+                        padding: 18px 10px;
+                        text-align: center;
+                        font-weight: 500;
+                        transition: 0.25s;
+                    }
+
+                    .cat-card span {
+                        font-size: 1.8rem;
+                        display: block;
+                        margin-bottom: 6px;
+                    }
+
+                    .cat-card:hover {
+                        background: #2563eb;
+                        color: #fff;
+                        transform: translateY(-4px);
+                    }
+
+                    /* Right-side handle */
+                    #categoryHandle {
+                        position: fixed;
+                        right: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        background: #2563eb;
+                        color: #fff;
+                        padding: 14px 12px;
+                        border-radius: 14px 0 0 14px;
+                        cursor: grab;
+                        font-size: 18px;
+                        z-index: 999;
+                        user-select: none;
+                        touch-action: none;
+                    }
+
+                    #categoryHandle:active {
+                        cursor: grabbing;
+                    }
+
+
+                    /* Mobile */
+                    @media (max-width: 768px) {
+                        .category-grid {
+                            grid-template-columns: repeat(2, 1fr);
+                        }
+                    }
+
+                    /* ===== SEARCH SUGGESTIONS ===== */
+                    .search-suggestions {
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        width: 100%;
+                        background: #fff;
+                        border-radius: 12px;
+                        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+                        margin-top: 6px;
+                        max-height: 280px;
+                        overflow-y: auto;
+                        display: none;
+                        z-index: 999;
+                    }
+
+                    .search-suggestions div {
+                        padding: 10px 14px;
+                        cursor: pointer;
+                        font-size: 0.9rem;
+                        border-bottom: 1px solid #f1f5f9;
+                    }
+
+                    .search-suggestions div:last-child {
+                        border-bottom: none;
+                    }
+
+                    .search-suggestions div:hover,
+                    .search-suggestions div.active {
+                        background: #2563eb;
+                        color: #fff;
+                    }
+
+                    .search-suggestions {
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        width: 100%;
+                        background: #fff;
+                        z-index: 999;
+                        display: none;
+                    }
+                </style>
+
+                <input type="text" id="searchInput" class="filter-input"
+                    placeholder="🔍 Search ads, locations, areas, local govt..." value="<%= search || '' %>"
+                    onchange=" applyFilters()" />
+
+
+
+                <div id="searchSuggestions" class="search-suggestions"></div>
+
+                <select id="locationInput" class="filter-select" onchange="applyFilters()">
+            <option value="">choose a state</option>
+            <option value="abia">Abia</option>
+            <option value="adamawa">Adamawa</option>
+            <option value="akwaibom">Akwa Ibom</option>
+            <option value="anambra">Anambra</option>
+            <option value="bauchi">Bauchi</option>
+            <option value="bayelsa">Bayelsa</option>
+            <option value="benue">Benue</option>
+            <option value="borno">Borno</option>
+            <option value="crossriver">Cross River</option>
+            <option value="delta">Delta</option>
+            <option value="ebonyi">Ebonyi</option>
+            <option value="edo">Edo</option>
+            <option value="ekiti">Ekiti</option>
+            <option value="enugu">Enugu</option>
+            <option value="gombe">Gombe</option>
+            <option value="imo">Imo</option>
+            <option value="jigawa">Jigawa</option>
+            <option value="kaduna">Kaduna</option>
+            <option value="kano">Kano</option>
+            <option value="katsina">Katsina</option>
+            <option value="kebbi">Kebbi</option>
+            <option value="kogi">Kogi</option>
+            <option value="kwara">Kwara</option>
+            <option value="lagos">Lagos</option>
+            <option value="nasarawa">Nasarawa</option>
+            <option value="niger">Niger</option>
+            <option value="ogun">Ogun</option>
+            <option value="ondo">Ondo</option>
+            <option value="osun">Osun</option>
+            <option value="oyo">Oyo</option>
+            <option value="plateau">Plateau</option>
+            <option value="rivers">Rivers</option>
+            <option value="sokoto">Sokoto</option>
+            <option value="taraba">Taraba</option>
+            <option value="yobe">Yobe</option>
+            <option value="zamfara">Zamfara</option>
+            <option value="fct">FCT - Abuja</option>
+
+                </select>
+
+                <select id="sortFilter" class="filter-select" onchange="applyFilters()">
+
+                    <option class="chip" value="">Newest</option>
+                    <option value="low" <%=sort==='low' ? 'selected' : '' %>>Price: Low → High</option>
+                    <option value="high" <%=sort==='high' ? 'selected' : '' %>>Price: High → Low</option>
+                </select>
+
+                <select id="categoryFilter" class="filter-select" onchange="applyFilters()">
+                    <option value="">All Categories</option>
+                    <option value="Houses" <%=category==='Houses' ? 'selected' : '' %>>Houses</option>
+                    <option value="Vehicle" <%=category==='Vehicle' ? 'selected' : '' %>>Vehicles</option>
+                    <option value="Devices" <%=category==='Devices' ? 'selected' : '' %>>Electronics</option>
+                    <option value="Fashion" <%=category==='Fashion' ? 'selected' : '' %>>Fashion</option>
+                    <option value="Furnitures" <%=category==='Furnitures' ? 'selected' : '' %>>Furnitures</option>
+                    <option value="Appliances" <%=category==='Appliances' ? 'selected' : '' %>>Services/jobs</option>
+                </select>
+
+
+            </div>
+
+
+        </div>
+        <script>
+
+            function applyFilters() {
+                const params = new URLSearchParams();
+                const cat = document.getElementById("categoryFilter")?.value;
+                const sort = document.getElementById("sortFilter")?.value;
+                const search = document.getElementById("searchInput")?.value;
+                const loc = document.getElementById("locationInput")?.value;
+
+                if (cat) params.set('category', cat.trim());
+                if (sort) params.set('sort', sort.trim());
+                if (search) params.set('search', search.trim());
+                if (loc) params.set('location', loc.trim());
+                window.location.href = (window.location.pathname || '/') + (params.toString() ? '?' + params.toString() : '');
+            }
+
+        </script>
+
+        <!-- VIP -->
+        <div class="grid">
+            <% vipListings.forEach(list=>{ %>
+                <%if( list.country=='nigeria' ){%>
+                    <a href="/nig/<%=list.category%>/<%=list._id%>">
+                        <div class="card vip-card">
+                            <span class="badge">VIP</span>
+                            <img src="<%=list.bgimg%>">
+                            <div class="card-content">
+                                <div class="vip-features">
+                                    <h3>
+
+                                        <%= list.title %>
+                                    </h3>
+                                    <span>
+
+                                        <%if(list.category=='Houses' ){%>
+                                            <%=list.typo%>
+                                                <%}%>
+                                                    <%if(list.category=='Vehicle' ){%>
+                                                        <%=list.mileage%>
+                                                            <%}%>
+                                                                <%if(list.category=='Fashion' ){%>
+                                                                    <%=list.gender%> Fashion
+                                                                        <%}%>
+                                                                            <%if(list.category=='Appliances' ){%>
+                                                                                <%=list.condition%>
+                                                                                    <%}%>
+                                                                                        <%if(list.category=='Devices'
+                                                                                            ){%>
+                                                                                            <%=list.condition%>
+                                                                                                <%}%>
+                                                                                                    <%if(list.category=='Furnitures'
+                                                                                                        ){%>
+                                                                                                        <%=list.condition%>
+                                                                                                            <%}%>
+                                    </span>
+                                </div>
+                                <%if(list.country=='ghana' ){%>
+                                    <div class="price">₵<%=Number(list.price).toLocaleString()%>
+                                    </div>
+                                    <%}%>
+                                        <%if(list.country=='nigeria' ){%>
+                                            <div class="price">₦<%=Number(list.price).toLocaleString()%>
+                                            </div>
+                                            <%}%>
+
+
+                                                <div class="details">
+
+                                                    <%= list.location %>, <%= list.specific %>
+                                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <%}%>
+                        <%if(list.country !='ghana' ){%>
+
+                            <%}%>
+                                <% }) %>
+        </div>
+
+        <div class="grid">
+
+            <% normalListings.forEach(list=> { %>
+                <%if( list.country=='nigeria' ){%>
+                    <a href="/nig/<%= list.category %>/<%= list._id %>">
+                        <div class="card ">
+                            <div class="badge">
+                                <% if(list.category){ %>
+                                    <%=list.category%>
+                                        <% } else if(list.transmission){ %>
+                                            <%=list.mileage%>
+                                                <% } else if(list.typo && list.typo=='digital product' ){ %>
+                                                    <%=list.typo %>
+                                                        <% } else if(list.condition){%>
+                                                            <%=list.condition%>
+                                                                <% }%>
+                            </div>
+                            <img src="<%= list.bgimg %>" loading="lazy" alt="Property">
+                            <style>
+                                .features span {
+                                    background: #f7f7f7;
+                                    padding: 5px 10px;
+                                    border-radius: 8px;
+                                    display: inline;
+                                    font-size: 0.9rem;
+                                    margin-right: 6px;
+                                }
+                            </style>
+                            <div class="card-content">
+                                <div class="features">
+                                    <h3>
+
+                                        <%= list.title %>
+                                    </h3>
+                                    <span>
+
+                                        <%if(list.category=='Houses' ){%>
+                                            <%=list.typo%>
+                                                <%}%>
+                                                    <%if(list.category=='Vehicle' ){%>
+                                                        <%=list.mileage%>
+                                                            <%}%>
+                                                                <%if(list.category=='Fashion' ){%>
+                                                                    <%=list.gender%> Fashion
+                                                                        <%}%>
+                                                                            <%if(list.category=='Appliances' ){%>
+                                                                                <%=list.condition%>
+                                                                                    <%}%>
+                                                                                        <%if(list.category=='Devices'
+                                                                                            ){%>
+                                                                                            <%=list.condition%>
+                                                                                                <%}%>
+                                                                                                    <%if(list.category=='Furnitures'
+                                                                                                        ){%>
+                                                                                                        <%=list.condition%>
+                                                                                                            <%}%>
+                                    </span>
+                                </div>
+
+
+                                <%if(list.country=='ghana' ){%>
+                                    <div class="price">₵<%=Number(list.price).toLocaleString()%>
+                                    </div>
+                                    <%}%>
+                                        <%if(list.country=='nigeria' ){%>
+                                            <div class="price">₦<%=Number(list.price).toLocaleString()%>
+
+                                            </div>
+                                            <%}%>
+                                                <div class="details">
+
+                                                    <%= list.location %>, <%= list.specific %>
+                                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    <% }%>
+                        <%if( list.country !='nigeria' ){%>
+
+                            <%}%>
+                                <% }) %>
+        </div>
+        <style>
+            /* Notifications */
+            .notifications-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                max-width: 340px;
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                z-index: 9999;
+            }
+
+            .notification-card {
+                position: relative;
+                background: linear-gradient(135deg, #4f46e5, #3b82f6);
+                color: #fff;
+                padding: 15px 20px;
+                border-radius: 15px;
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+                animation: slideIn 0.7s ease, float 3s ease-in-out infinite;
+                font-size: 14px;
+                line-height: 1.4;
+            }
+
+            .notification-header {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 15px;
+                margin-bottom: 6px;
+            }
+
+            .notification-card a {
+                color: #ffdd57;
+                font-weight: bold;
+            }
+
+            .notification-card a:hover {
+                text-decoration: underline;
+            }
+
+            .close-btn {
+                position: absolute;
+                top: 6px;
+                right: 8px;
+                background: none;
+                border: none;
+                color: #fff;
+                font-size: 18px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+            }
+
+            .close-btn:hover {
+                transform: scale(1.2);
+                color: #ff4d4d;
+            }
+        </style>
+
+    </main>
+    <script>
+
+        const panel = document.getElementById("categoryPanel");
+        const handle = document.getElementById("categoryHandle");
+        const skipBtn = document.getElementById("skipCategories");
+
+        let isDragging = false;
+        let startX = 0;
+
+        function hidePanel() {
+            panel.classList.add("hide");
+            handle.style.display = "block";
+        }
+        function showPanel() {
+            const main = document.querySelector(".main");
+            if (!main) return;
+
+            main.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+
+            // Show category panel immediately
+            panel.classList.remove("hide");
+            handle.style.display = "none";
+        }
+
+
+        skipBtn.onclick = hidePanel;
+
+        /* ===== DRAG START ===== */
+        function dragStart(e) {
+            isDragging = true;
+            startX = e.type.includes("mouse")
+                ? e.clientX
+                : e.touches[0].clientX;
+
+            handle.style.transition = "none";
+        }
+
+        /* ===== DRAG MOVE ===== */
+        function dragMove(e) {
+            if (!isDragging) return;
+
+            const currentX = e.type.includes("mouse")
+                ? e.clientX
+                : e.touches[0].clientX;
+
+            const delta = startX - currentX;
+
+            // Move handle slightly while dragging
+            if (delta > 0 && delta < 120) {
+                handle.style.transform = `translate(${-delta}px, -50%)`;
+            }
+        }
+
+        /* ===== DRAG END ===== */
+        function dragEnd(e) {
+            if (!isDragging) return;
+            isDragging = false;
+
+            const endX = e.type.includes("mouse")
+                ? e.clientX
+                : e.changedTouches[0].clientX;
+
+            const delta = startX - endX;
+
+            handle.style.transition = "transform 0.3s ease";
+            handle.style.transform = "translate(0, -50%)";
+
+            // Threshold
+            if (delta > 60) {
+                showPanel();
+                // dragged left
+            }
+        }
+
+        /* Mouse */
+        handle.addEventListener("mousedown", dragStart);
+        window.addEventListener("mousemove", dragMove);
+        window.addEventListener("mouseup", dragEnd);
+
+        /* Touch */
+        handle.addEventListener("touchstart", dragStart);
+        window.addEventListener("touchmove", dragMove);
+        window.addEventListener("touchend", dragEnd);
+    </script>
+    <script>
+        skipBtn.onclick = () => {
+            panel.classList.add("hide");
+            localStorage.setItem("hideCategories", "1");
+            handle.style.display = "block";
+        };
+
+        if (localStorage.getItem("hideCategories")) {
+            panel.classList.add("hide");
+            handle.style.display = "block";
+        }
+
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                const loader = document.getElementById("loader");
+                loader.style.opacity = "0";
+                setTimeout(() => loader.style.display = "none", 500);
+            }, 3500); // 1 second
+        });
+
+        /* ===== SIDEBAR ===== */
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        document.getElementById("hamburger").onclick = () => {
+            sidebar.classList.toggle("show");
+            overlay.classList.toggle("show");
+        };
+        overlay.onclick = () => {
+            sidebar.classList.remove("show");
+            overlay.classList.remove("show");
+        };
+
+        function confirmLogout(e) {
+            if (!confirm("Log out?")) e.preventDefault();
+        }
+
+    </script>
+
+
+    <script>
+        const closemsg = document.querySelector(".notification-card");
+        console.log(closemsg)
+        // Logout confirmation
+        function confirmLogout(e) {
+            if (!confirm("⚠️ Are you sure you want to log out?")) e.preventDefault();
+        }
+
+        // Mobile filter toggle
+        const filterToggle = document.getElementById("filterToggle");
+        const filters = document.querySelector(".filters");
+        if (filterToggle && filters) {
+            filterToggle.addEventListener("click", () => filters.classList.toggle("show-filters"));
+        }
+
+        // Sidebar toggle
+        const hamburger = document.getElementById("hamburger");
+        const overlay = document.getElementById("overlay");
+        if (hamburger && sidebar && overlay) {
+            hamburger.addEventListener("click", () => {
+                sidebar.classList.toggle("show");
+                overlay.classList.toggle("show");
+            });
+            overlay.addEventListener("click", () => {
+                sidebar.classList.remove("show");
+                overlay.classList.remove("show");
+            });
+        }
+
+        // Apply filters
+
+
+
+        // Loader
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                const loader = document.getElementById("loader");
+                if (loader) { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 500); }
+            }, 1200);
+        });
+
+
+        // Format prices client-side
+        function formatPricesOnClient() {
+            document.querySelectorAll('.price').forEach(el => {
+                const text = el.innerText || '';
+                const match = text.match(/(\d[\d,\.]*)/);
+                if (match) {
+                    const num = Number(match[1].replace(/,/g, ''));
+                    if (!isNaN(num)) el.innerText = text.replace(match[1], num.toLocaleString());
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', formatPricesOnClient);
+    </script>
+
+</body>
+
+</html>
