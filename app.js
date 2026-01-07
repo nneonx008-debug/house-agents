@@ -2646,3 +2646,6 @@ await Furnitures.findByIdAndUpdate(id , {$set : {
   }
   res.redirect(`/edit/${category}/${id}`)
 });
+app.get('/opt' , async(req,res) => {
+  res.render('demo')
+})
