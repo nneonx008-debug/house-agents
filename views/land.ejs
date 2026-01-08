@@ -194,6 +194,37 @@
         height: 320px;
         border-radius: 20px;
     }
+.hero-buttons {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* Outline button */
+.btn-outline {
+    border: 2px solid #e5e7eb;
+    color: #334155;
+    background: white;
+}
+
+.btn-outline:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+}
+
+/* Mobile stacking */
+@media (max-width: 900px) {
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+        text-align: center;
+    }
+}
 
     /* FEATURES STRIP */
     .features {
@@ -551,7 +582,7 @@
     <nav id="mobileNav">
         <a href="#features">Features</a>
         <a href="/isLogging">Login</a>
-        <a href="/signup" class="nav-cta">Get Started</a>
+        <a href="/signup" class="nav-cta">Signup</a>
     </nav>
 </header>
 
@@ -564,16 +595,22 @@
             smart filtering, and a fast, lightweight experience.
         </p>
 
-        <div class="hero-actions">
-            <a href="/signup" class="btn btn-primary">Get Started</a>
-            <button id="installBtn" class="btn btn-secondary" style="display:none;">
-                Download App
-            </button>
-            <p id="iosHint" class="ios-hint">
-                Install NeonX via <strong>Share → Add to Home Screen</strong>
-            </p>
+<div class="hero-actions hero-buttons">
+    <a href="/signup" class="btn btn-primary">Create Free Account</a>
 
-        </div>
+    <a href="/explore" class="btn btn-outline">
+        Explore Without Account
+    </a>
+
+    <button id="installBtn" class="btn btn-secondary" style="display:none;">
+        Download App
+    </button>
+
+    <p id="iosHint" class="ios-hint">
+        Install NeonX via <strong>Share → Add to Home Screen</strong>
+    </p>
+</div>
+
     </div>
 
 <div class="hero-visual" id="featureCarousel">
