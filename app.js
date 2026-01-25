@@ -24,7 +24,438 @@ const app = express();
 // server.js (or your main file)
 const http = require('http');
 const { Server } = require('socket.io');
+const Houses =require('./models/house');
 
+function startCron() {
+cron.schedule('0 0 * * *', async () => {
+  try {
+    let deleted = null  ;
+    const now = new Date();
+    console.log('⏰ Cron running at', now.toISOString());
+
+    // 1️⃣ Expire VIP
+    await Houses.updateMany(
+      { VIP: true, vipExpiresAt: { $lte: now } },
+      { $set: { VIP: false, vipExpiresAt: null } }
+    );
+
+    // 2️⃣ Expire Ad
+    await Houses.updateMany(
+      { expired: false, adExpiresAt: { $lte: now } },
+      { $set: { expired: true, adExpiresAt: null } }
+    );
+    await Houses.updateMany(
+      { boost: { $lte: now } },
+      { $set: { boost:null, boostCount : 0 } }
+    );
+
+    // 3️⃣ Set deadline ONCE (grace period)
+    await Houses.updateMany(
+      { expired: true, deadline: null },
+      { $set: { deadline: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } } // 1 min grace
+    );
+
+    // 4️⃣ Delete after grace period
+     deleted = await Houses.deleteMany({
+      expired: true,
+      deadline: { $lte: now }
+    });
+
+    const home =  await Houses.find({expired : true}) ; 
+    home.forEach(m => {
+      const   homeMsg = new Message({
+        receiver : m.userId, 
+        sender : m.userId , 
+        lik : '/profile',
+        isfeedback : true  ,
+        content : `One of your ad "${m.title}" expired, renew it for free before it's too late 🥶 `
+      })
+       homeMsg.save();
+        const a = User.findById(m.userId) ; 
+      // Create transporter with TLS fix
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,       // your Gmail sender
+          pass: process.env.EMAIL_PASS   // your 16-character app password
+        },
+        tls: {
+          rejectUnauthorized: false      // <-- fix self-signed certificate error
+        }
+      });
+
+      // Email content
+      const mailOptions = {
+        from: `"Edsam Agents" <${process.env.EMAIL}>`,
+        to: a.email,
+        subject: "Welcome to Neonx market",
+        html: `
+          <p>Hello ${a.username},</p>
+          <p>Alert ${a.username} your AD "${m.title} expired, renew before it's too late! 🥶".</p>
+          <p>
+            <a href="${process.env.APP_URL}/profile">
+              Click Here to Continue
+            </a>
+          </p>
+        `
+      };
+
+      // Send the email
+       transporter.sendMail(mailOptions);
+    
+    })
+    await Vehicle.updateMany(
+      { VIP: true, vipExpiresAt: { $lte: now } },
+      { $set: { VIP: false, vipExpiresAt: null } }
+    );
+
+    // 2️⃣ Expire Ad
+    await Vehicle.updateMany(
+      { expired: false, adExpiresAt: { $lte: now } },
+      { $set: { expired: true, adExpiresAt: null } }
+    );
+    await Vehicle.updateMany(
+      { boost: { $lte: now } },
+      { $set: { boost:null, boostCount : 0 } }
+    );
+
+    // 3️⃣ Set deadline ONCE (grace period)
+    await Vehicle.updateMany(
+      { expired: true, deadline: null },
+      { $set: { deadline: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } } // 1 min grace
+    );
+
+    // 4️⃣ Delete after grace period
+     deleted = await Vehicle.deleteMany({
+      expired: true,
+      deadline: { $lte: now }
+    });
+    const cars = await Vehicle.find({expired : true});
+        cars.forEach(m => {
+          const   carMsg = new Message({
+        receiver : m.userId, 
+        sender : m.userId , 
+        lik : '/profile',
+        isfeedback : true  ,
+        content : `One of your ad "${m.title}" expired, renew it for free before it's too late 🥶`
+      })
+       carMsg.save();
+        const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,       // your Gmail sender
+          pass: process.env.EMAIL_PASS   // your 16-character app password
+        },
+        tls: {
+          rejectUnauthorized: false      // <-- fix self-signed certificate error
+        }
+      });
+
+      // Email content
+      const mailOptions = {
+        from: `"Edsam Agents" <${process.env.EMAIL}>`,
+        to: a.email,
+        subject: "Welcome to Neonx market",
+        html: `
+          <p>Hello ${a.username},</p>
+          <p>Alert ${a.username} your AD "${m.title} expired, renew before it's too late! 🥶".</p>
+          <p>
+            <a href="${process.env.APP_URL}/profile">
+              Click Here to Continue
+            </a>
+          </p>
+        `
+      };
+
+      // Send the email
+       transporter.sendMail(mailOptions);
+    })
+    await Fashion.updateMany(
+      { VIP: true, vipExpiresAt: { $lte: now } },
+      { $set: { VIP: false, vipExpiresAt: null } }
+    );
+
+    // 2️⃣ Expire Ad
+    await Fashion.updateMany(
+      { expired: false, adExpiresAt: { $lte: now } },
+      { $set: { expired: true, adExpiresAt: null } }
+    );
+    await Fashion.updateMany(
+      { boost: { $lte: now } },
+      { $set: { boost:null, boostCount : 0 } }
+    );
+
+    // 3️⃣ Set deadline ONCE (grace period)
+    await Fashion.updateMany(
+      { expired: true, deadline: null },
+      { $set: { deadline: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } } // 1 min grace
+    );
+
+    // 4️⃣ Delete after grace period
+     deleted = await Fashion.deleteMany({
+      expired: true,
+      deadline: { $lte: now }
+    });
+ const fashion =  await Fashion.find({expired : true}) ; 
+    fashion.forEach(m => {
+      const   fashionMsg = new Message({
+        receiver : m.userId, 
+        sender : m.userId , 
+        lik : '/profile',
+        isfeedback : true  ,
+        content : `One of your ad "${m.title}" expired, renew it for free before it's too late 🥶 `
+      })
+       fashionMsg.save();
+        const a = User.findById(m.userId) ; 
+      // Create transporter with TLS fix
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,       // your Gmail sender
+          pass: process.env.EMAIL_PASS   // your 16-character app password
+        },
+        tls: {
+          rejectUnauthorized: false      // <-- fix self-signed certificate error
+        }
+      });
+
+      // Email content
+      const mailOptions = {
+        from: `"Edsam Agents" <${process.env.EMAIL}>`,
+        to: a.email,
+        subject: "Welcome to Neonx market",
+        html: `
+          <p>Hello ${a.username},</p>
+          <p>Alert ${a.username} your AD "${m.title} expired, renew before it's too late! 🥶".</p>
+          <p>
+            <a href="${process.env.APP_URL}/profile">
+              Click Here to Continue
+            </a>
+          </p>
+        `
+      };
+
+      // Send the email
+       transporter.sendMail(mailOptions);
+    
+    })
+    await Furnitures.updateMany(
+      { VIP: true, vipExpiresAt: { $lte: now } },
+      { $set: { VIP: false, vipExpiresAt: null } }
+    );
+
+    // 2️⃣ Expire Ad
+    await Furnitures.updateMany(
+      { expired: false, adExpiresAt: { $lte: now } },
+      { $set: { expired: true, adExpiresAt: null } }
+    );
+    await Furnitures.updateMany(
+      { boost: { $lte: now } },
+      { $set: { boost:null, boostCount : 0 } }
+    );
+
+    // 3️⃣ Set deadline ONCE (grace period)
+    await Furnitures.updateMany(
+      { expired: true, deadline: null },
+      { $set: { deadline: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } } // 1 min grace
+    );
+
+    // 4️⃣ Delete after grace period
+     deleted = await Furnitures.deleteMany({
+      expired: true,
+      deadline: { $lte: now }
+    });
+ const fun =  await Furnitures.find({expired : true}) ; 
+    fun.forEach(m => {
+      const   furnitureMsg = new Message({
+        receiver : m.userId, 
+        sender : m.userId , 
+        lik : '/profile',
+        isfeedback : true  ,
+        content : `One of your ad "${m.title}" expired, renew it for free before it's too late 🥶 `
+      })
+       furnitureMsg.save();
+        const a = User.findById(m.userId) ; 
+      // Create transporter with TLS fix
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,       // your Gmail sender
+          pass: process.env.EMAIL_PASS   // your 16-character app password
+        },
+        tls: {
+          rejectUnauthorized: false      // <-- fix self-signed certificate error
+        }
+      });
+
+      // Email content
+      const mailOptions = {
+        from: `"Edsam Agents" <${process.env.EMAIL}>`,
+        to: a.email,
+        subject: "Welcome to Neonx market",
+        html: `
+          <p>Hello ${a.username},</p>
+          <p>Alert ${a.username} your AD "${m.title} expired, renew before it's too late! 🥶".</p>
+          <p>
+            <a href="${process.env.APP_URL}/profile">
+              Click Here to Continue
+            </a>
+          </p>
+        `
+      };
+
+      // Send the email
+       transporter.sendMail(mailOptions);
+    
+    })
+    await Appliances.updateMany(
+      { VIP: true, vipExpiresAt: { $lte: now } },
+      { $set: { VIP: false, vipExpiresAt: null } }
+    );
+
+    // 2️⃣ Expire Ad
+    await Appliances.updateMany(
+      { expired: false, adExpiresAt: { $lte: now } },
+      { $set: { expired: true, adExpiresAt: null } }
+    );
+    await Appliances.updateMany(
+      { boost: { $lte: now } },
+      { $set: { boost:null, boostCount : 0 } }
+    );
+
+    // 3️⃣ Set deadline ONCE (grace period)
+    await Appliances.updateMany(
+      { expired: true, deadline: null },
+      { $set: { deadline: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } } // 1 min grace
+    );
+
+    // 4️ Delete after grace period
+     deleted = await Appliances.deleteMany({
+      expired: true,
+      deadline: { $lte: now }
+    });
+   const appliance =  await Appliances.find({expired : true}) ; 
+    appliance.forEach(m => {
+      const   aplMsg = new Message({
+        receiver : m.userId, 
+        sender : m.userId , 
+        lik : '/profile',
+        isfeedback : true  ,
+        content : `One of your ad "${m.title}" expired, renew it for free before it's too late 🥶 `
+      })
+       aplMsg.save();
+        const a = User.findById(m.userId) ; 
+      // Create transporter with TLS fix
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,       // your Gmail sender
+          pass: process.env.EMAIL_PASS   // your 16-character app password
+        },
+        tls: {
+          rejectUnauthorized: false      // <-- fix self-signed certificate error
+        }
+      });
+
+      // Email content
+      const mailOptions = {
+        from: `"Edsam Agents" <${process.env.EMAIL}>`,
+        to: a.email,
+        subject: "Welcome to Neonx market",
+        html: `
+          <p>Hello ${a.username},</p>
+          <p>Alert ${a.username} your AD "${m.title} expired, renew before it's too late! 🥶".</p>
+          <p>
+            <a href="${process.env.APP_URL}/profile">
+              Click Here to Continue
+            </a>
+          </p>
+        `
+      };
+
+      // Send the email
+       transporter.sendMail(mailOptions);
+    
+    })
+    await Devices.updateMany(
+      { VIP: true, vipExpiresAt: { $lte: now } },
+      { $set: { VIP: false, vipExpiresAt: null } }
+    );
+
+    // 2️⃣ Expire Ad
+    await Devices.updateMany(
+      { expired: false, adExpiresAt: { $lte: now } },
+      { $set: { expired: true, adExpiresAt: null } }
+    );
+    await Devices.updateMany(
+      { boost: { $lte: now } },
+      { $set: { boost:null, boostCount : 0 } }
+    );
+
+    // 3️⃣ Set deadline ONCE (grace period)
+    await Devices.updateMany(
+      { expired: true, deadline: null },
+      { $set: { deadline: new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000) } } // 1 min grace
+    );
+
+    // 4️⃣ Delete after grace period
+   deleted = await Devices.deleteMany({
+      expired: true,
+      deadline: { $lte: now }
+    });
+     const devices =  await Devices.find({expired : true}) ; 
+    devices.forEach(m => {
+      const   deviceMsg = new Message({
+        receiver : m.userId, 
+        sender : m.userId , 
+        lik : '/profile',
+        isfeedback : true  ,
+        content : `One of your ad "${m.title}" expired, renew it for free before it's too late 🥶 `
+      })
+       deviceMsg.save();
+        const a = User.findById(m.userId) ; 
+      // Create transporter with TLS fix
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,       // your Gmail sender
+          pass: process.env.EMAIL_PASS   // your 16-character app password
+        },
+        tls: {
+          rejectUnauthorized: false      // <-- fix self-signed certificate error
+        }
+      });
+
+      // Email content
+      const mailOptions = {
+        from: `"Edsam Agents" <${process.env.EMAIL}>`,
+        to: a.email,
+        subject: "Welcome to Neonx market",
+        html: `
+          <p>Hello ${a.username},</p>
+          <p>Alert ${a.username} your AD "${m.title} expired, renew before it's too late! 🥶".</p>
+          <p>
+            <a href="${process.env.APP_URL}/profile">
+              Click Here to Continue
+            </a>
+          </p>
+        `
+      };
+
+      // Send the email
+       transporter.sendMail(mailOptions);
+    
+    })
+    console.log('🧹 Deleted ads:', deleted.deletedCount);
+
+  } catch (err) {
+    console.error('❌ Cron error:', err);
+  }
+});
+
+
+  console.log('🕒 Cron scheduled (every minute)');
+}
 // --- your existing middlewares, e.g. bodyParser, static, view engine, session, routes ---
 app.set('view engine', 'ejs');
 // example session (you might already have one)
@@ -224,7 +655,6 @@ const Fashion  = require('./models/fashion');
 const Vehicle  = require('./models/vehicle');
 const Devices = require('./models/device');
 const Furnitures = require('./models/furniture');
-const Houses =require('./models/house');
 const { devNull } = require('os');
 const { title } = require('process');
 const message = require('./models/message');
