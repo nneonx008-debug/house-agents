@@ -13,6 +13,7 @@
     "axios": "^1.11.0",
     "bcrypt": "^6.0.0",
     "cloudinary": "^1.41.3",
+    "cron": "^4.4.0",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "env": "^0.0.2",
@@ -22,6 +23,7 @@
     "mongoose": "^8.16.5",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
+    "nodemailer": "^7.0.12",
     "socket.io": "^4.8.3"
   }
 }

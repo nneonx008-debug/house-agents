@@ -25,6 +25,7 @@ const  housesSchema =  new Schema({
     date: { type: Date, default: Date.now } 
   }],
     category : String , 
+    typo:String , 
     location :String  ,
           VIP: { type: Boolean, default: false }, // 👈 new f
 

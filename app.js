@@ -1,9 +1,7 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+require('dotenv').config();
 const Freinds = require('./models/freinds');
 const path = require('path');
 const fs = require('fs');
@@ -377,6 +375,7 @@ app.post('/add-house', isAuthenticated, upload.fields([
       beds: req.body.beds,
       country:user.country ,
       category:"Houses"  ,
+      typo:req.body.typo,
       location: req.body.location,
       phonenumber: req.body.phonenumber,
       price: req.body.price
