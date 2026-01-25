@@ -12,6 +12,8 @@ const report = require('./models/admin');
 const session = require('express-session');
 const multer = require('multer');
 const bcrypt = require('bcrypt');
+const Organ = require('./models/services');
+
 const AllListing= require('./models/allListing');
 const User = require('./user');
 const Comment = require('./models/comments')
@@ -186,7 +188,7 @@ app.set('views', path.join(__dirname, 'views'));
 // server.js (or app.js)
 
 // MongoDB
-mongoose.connect('mongodb+srv://netninja:test1234@bookstore.dujrn.mongodb.net/?appName=bookstore', {
+mongoose.connect('mongodb+srv://test:test1234@cluster0.sj0rfog.mongodb.net/test?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => console.log('✅ MongoDB connected'))
@@ -254,7 +256,117 @@ app.get('/' , (req,res) => {
   res.render('land')
 })
 
+app.get('/home/:category/:id' , async (req, res) => {
+  try {
+    const { category, id } = req.params;
+   
+    let data = null;
+    let moreFunc = null;
 
+    // Get logged-in user
+
+    // Load listing based on category
+    switch (category) {
+      case "Houses":
+        data = await Houses.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Houses.find().sort({ boosting: -1 });
+        break;
+      case "Vehicle":
+        data = await Vehicle.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Vehicle.find().sort({ boosting: -1 });
+        break;
+      case "Devices":
+        data = await Devices.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Devices.find().sort({ boosting: -1 });
+        break;
+      case "Furnitures":
+        data = await Furnitures.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Furnitures.find().sort({ boosting: -1 });
+        break;
+      case "Appliances":
+        data = await Appliances.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Appliances.find().sort({ boosting: -1 });
+        break;
+      case "Fashion":
+        data = await Fashion.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Fashion.find().sort({ boosting: -1 });
+        break;
+      default:
+        return res.status(400).send("Invalid category");
+    }
+
+    if (!data) {
+      return res.status(404).send("Listing not found");
+    }
+
+
+
+    res.render("ghanaone", { home: data,  more: moreFunc});
+
+  }catch (err) {
+  console.error(err);
+  res.status(500).render("error", {
+    message: "Something went wrong. Please try again."
+  });
+}
+});
+app.get('/nig/:category/:id' , async (req, res) => {
+  try {
+    const { category, id } = req.params;
+   
+    let data = null;
+    let moreFunc = null;
+
+    // Get logged-in user
+
+    // Load listing based on category
+    switch (category) {
+      case "Houses":
+        data = await Houses.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Houses.find().sort({ boosting: -1 });
+        break;
+      case "Vehicle":
+        data = await Vehicle.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Vehicle.find().sort({ boosting: -1 });
+        break;
+      case "Devices":
+        data = await Devices.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Devices.find().sort({ boosting: -1 });
+        break;
+      case "Furnitures":
+        data = await Furnitures.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Furnitures.find().sort({ boosting: -1 });
+        break;
+      case "Appliances":
+        data = await Appliances.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Appliances.find().sort({ boosting: -1 });
+        break;
+      case "Fashion":
+        data = await Fashion.findById(id).populate('userId', 'email rating').lean();
+        moreFunc = await Fashion.find().sort({ boosting: -1 });
+        break;
+      default:
+        return res.status(400).send("Invalid category");
+    }
+
+    if (!data) {
+      return res.status(404).send("Listing not found");
+    }
+
+    // ✅ Now that we have data, we can fetch feedback
+    const feedbacks = await Feedback.find({ sellerId: data.userId._id })
+      .populate("buyerId", "username email")
+      .sort({ createdAt: -1 });
+
+    res.render("nigeriaone", { home: data,  more: moreFunc});
+
+  }catch (err) {
+  console.error(err);
+  res.status(500).render("error", {
+    message: "Something went wrong. Please try again."
+  });
+}
+});
 app.get('/property/:category/:id', isAuthenticated , async (req, res) => {
   try {
     const group = await Freinds.find({userId:req.session.userId}).populate('email')
@@ -374,6 +486,8 @@ app.post('/add-house', isAuthenticated, upload.fields([
       baths: req.body.baths,
       beds: req.body.beds,
       country:user.country ,
+            typo:req.body.typo  ,
+
       category:"Houses"  ,
       typo:req.body.typo,
       location: req.body.location,
@@ -915,7 +1029,252 @@ app.get("/dashboard", isAuthenticated, async (req, res) => {
 }
 });
 
+app.get("/ghana", async (req, res) => {
+  try {
 
+    const { sort, category, search, location } = req.query;
+    
+    /* ================= FETCH BASE LISTINGS ================= */
+    const baseListings = await AllListing.find()
+      .lean()
+      .sort({ boosting: -1, createdAt: -1 });
+
+    /* ================= RESOLVE CATEGORY DATA ================= */
+    const collections = {
+      Vehicle,
+      Houses,
+      Devices,
+      Furnitures,
+      Appliances,
+      Fashion,
+    };
+    
+    const resolvedListings = (
+      await Promise.all(
+        baseListings.map(async (item) => {
+          const Model = collections[item.category];
+          if (!Model) return null;
+          
+          const data = await Model.findById(item.refId).lean();
+          return data ? { ...item, ...data } : null;
+        })
+      )
+    ).filter(Boolean);
+
+    /* ================= FILTERING ================= */
+    let filteredListings = [...resolvedListings];
+
+    /* --- CATEGORY --- */
+    if (category) {
+      filteredListings = filteredListings.filter(
+        (list) => list.category === category
+      );
+    }
+    
+    /* --- LOCATION --- */
+    if (location) {
+      const loc = location;
+      filteredListings = filteredListings.filter((list) =>
+        (list.location || "").includes(loc)
+      );
+    }
+
+    /* --- SMART SEARCH (WORD MATCH) --- */
+    if (search) {
+      const words = search
+        .trim()
+        
+        .split(/\s+/)
+        .filter(Boolean);
+
+      filteredListings = filteredListings.filter((list) => {
+        const searchableText = `
+          ${list.title || ""}
+          ${list.location || ""}
+          ${list.category || ""}
+          ${list.specific || ""}
+          ${list.transmission || ""}
+          ${list.gender || ""}
+          ${list.condition || ""}
+                    ${list.beds || ""}
+          ${list.baths || ""}
+
+                    ${list.price || ""}
+       ${list.manufacturer || ""}
+
+                    ${list.fueltype || ""}
+                    ${list.mileage || ""}
+
+
+
+
+
+
+        `;
+
+        return words.some(word => searchableText.includes(word));
+      });
+    }
+
+    /* ================= SORTING ================= */
+    if (sort === "low") {
+      filteredListings.sort((a, b) => (a.price || 0) - (b.price || 0));
+    } else if (sort === "high") {
+      filteredListings.sort((a, b) => (b.price || 0) - (a.price || 0));
+    } else {
+      filteredListings.sort((a, b) => {
+        if ((b.boosting || 0) !== (a.boosting || 0)) {
+          return (b.boosting || 0) - (a.boosting || 0);
+        }
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+    }
+
+    /* ================= VIP SPLIT ================= */
+    const vipListings = filteredListings.filter(list => list.VIP === true);
+    const normalListings = filteredListings.filter(list => !list.VIP);
+    
+    /* ================= RENDER ================= */
+    res.render("ghanahome", {
+      
+      vipListings,
+      normalListings,
+      sort,
+      category,
+      search,
+      location,
+    });
+
+  } catch (err) {
+  console.error(err);
+  res.status(500).render("error", {
+    message: "Something went wrong. Please try again."
+  });
+}
+});
+app.get("/nigeria", async (req, res) => {
+  try {
+
+    const { sort, category, search, location } = req.query;
+    
+    /* ================= FETCH BASE LISTINGS ================= */
+    const baseListings = await AllListing.find()
+      .lean()
+      .sort({ boosting: -1, createdAt: -1 });
+
+    /* ================= RESOLVE CATEGORY DATA ================= */
+    const collections = {
+      Vehicle,
+      Houses,
+      Devices,
+      Furnitures,
+      Appliances,
+      Fashion,
+    };
+    
+    const resolvedListings = (
+      await Promise.all(
+        baseListings.map(async (item) => {
+          const Model = collections[item.category];
+          if (!Model) return null;
+          
+          const data = await Model.findById(item.refId).lean();
+          return data ? { ...item, ...data } : null;
+        })
+      )
+    ).filter(Boolean);
+
+    /* ================= FILTERING ================= */
+    let filteredListings = [...resolvedListings];
+
+    /* --- CATEGORY --- */
+    if (category) {
+      filteredListings = filteredListings.filter(
+        (list) => list.category === category
+      );
+    }
+    
+    /* --- LOCATION --- */
+    if (location) {
+      const loc = location;
+      filteredListings = filteredListings.filter((list) =>
+        (list.location || "").includes(loc)
+      );
+    }
+
+    /* --- SMART SEARCH (WORD MATCH) --- */
+    if (search) {
+      const words = search
+        .trim()
+        
+        .split(/\s+/)
+        .filter(Boolean);
+
+      filteredListings = filteredListings.filter((list) => {
+        const searchableText = `
+          ${list.title || ""}
+          ${list.location || ""}
+          ${list.category || ""}
+          ${list.specific || ""}
+          ${list.transmission || ""}
+          ${list.gender || ""}
+          ${list.condition || ""}
+                    ${list.beds || ""}
+          ${list.baths || ""}
+
+                    ${list.price || ""}
+       ${list.manufacturer || ""}
+
+                    ${list.fueltype || ""}
+                    ${list.mileage || ""}
+
+
+
+
+
+
+        `;
+
+        return words.some(word => searchableText.includes(word));
+      });
+    }
+
+    /* ================= SORTING ================= */
+    if (sort === "low") {
+      filteredListings.sort((a, b) => (a.price || 0) - (b.price || 0));
+    } else if (sort === "high") {
+      filteredListings.sort((a, b) => (b.price || 0) - (a.price || 0));
+    } else {
+      filteredListings.sort((a, b) => {
+        if ((b.boosting || 0) !== (a.boosting || 0)) {
+          return (b.boosting || 0) - (a.boosting || 0);
+        }
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+    }
+
+    /* ================= VIP SPLIT ================= */
+    const vipListings = filteredListings.filter(list => list.VIP === true);
+    const normalListings = filteredListings.filter(list => !list.VIP);
+    
+    /* ================= RENDER ================= */
+    res.render("nigeriahome", {
+      
+      vipListings,
+      normalListings,
+      sort,
+      category,
+      search,
+      location,
+    });
+
+  } catch (err) {
+  console.error(err);
+  res.status(500).render("error", {
+    message: "Something went wrong. Please try again."
+  });
+}
+});
 
 app.get('/vehicle', isAuthenticated, async (req, res) => {
   let listings = await Vehicle.find().sort({createdAt:-1}).populate('userId' , 'username');
@@ -1232,7 +1591,33 @@ app.get('/inbox', isAuthenticated, async (req, res) => {
     res.status(500).send('Server Error');
   }
 });
+app.get('/chat/each/:id/:prop/:category', isAuthenticated, async (req, res) => {
+  const otherUser = await User.findById(req.params.id);
+  const prop = req.params.prop    ;
+  const id  = req.params.id ;  
+   const category  =  req.params.category ; 
+  const profileUser = await User.findById(req.session.userId);
+  const user = await User.findById(req.session.userId)
+  if (!otherUser) return res.status(404).send('User not found');
 
+  const messages = await Message.find({
+    $or: [
+      { sender: req.session.userId, receiver: req.params.id },
+      { sender: req.params.id, receiver: req.session.userId }
+    ]
+  })
+  .sort({ createdAt: 1 })
+  .populate('sender', 'username email');
+await Message.updateMany(
+  { receiver: req.session.userId, isRead: false },
+  { $set: { isRead: true  } }
+);
+
+
+  const loggedInUser = await User.findById(req.session.userId);
+
+  res.redirect(`/property/${category}/${prop}`);
+});
 // Show chat with a specific user
 app.get('/chat/:id', isAuthenticated, async (req, res) => {
   const otherUser = await User.findById(req.params.id);
@@ -1258,6 +1643,32 @@ await Message.updateMany(
   const loggedInUser = await User.findById(req.session.userId);
 
   res.render('chat', { otherUser, user  ,messages, loggedInUser , profileUser });
+});
+app.get('/chat/each/:id/:prop/:category', isAuthenticated, async (req, res) => {
+  const otherUser = await User.findById(req.params.id);
+  const prop = req.params.prop    ;
+   const category  =  req.params.category ; 
+  const profileUser = await User.findById(req.session.userId);
+  const user = await User.findById(req.session.userId)
+  if (!otherUser) return res.status(404).send('User not found');
+
+  const messages = await Message.find({
+    $or: [
+      { sender: req.session.userId, receiver: req.params.id },
+      { sender: req.params.id, receiver: req.session.userId }
+    ]
+  })
+  .sort({ createdAt: 1 })
+  .populate('sender', 'username email');
+await Message.updateMany(
+  { receiver: req.session.userId, isRead: false },
+  { $set: { isRead: true  } }
+);
+
+
+  const loggedInUser = await User.findById(req.session.userId);
+
+  res.redirect(`/property/${category}/${id}`);
 });
 app.get('/chat/feedback/:id', isAuthenticated, async (req, res) => {
   const otherUser = await User.findById(req.params.id);
@@ -2082,4 +2493,160 @@ app.post('/propose/:sellerid/:category/:id/:title' , isAuthenticated , async(req
   })
   await msg.save();
   res.redirect(`/property/${category}/${id}`)
+})
+app.get('/edit/:category/:id' , isAuthenticated , async(req,res) => {
+  const {category  , id  }  =req.params ; 
+  let edit;
+  const user = await User.findById(req.session.userId) ;
+  if(category == 'Houses'){
+    edit = await Houses.findById(id) ; 
+  }
+   if(category == 'Vehicle'){
+    edit =  await Vehicle.findById(id)
+  }
+   if(category == 'Devices'){
+    edit = await Devices.findById(id)
+  }
+  if(category == 'Furnitures'){
+    edit = await Furnitures.findById(id)
+  }
+  if(category == 'Appliances'){
+    edit = await Appliances.findById(id) ; 
+  }
+  if(category == 'Fashion'){
+    edit = await Fashion.findById(id) ; 
+  }
+  res.render('edit' ,{ home : edit  , user})
+})
+app.post('/edited/:category/:id' , isAuthenticated , 
+  upload.fields([
+  {name: 'bgimg' , maxCount :1} ,
+  {name : 'extraimg'  ,maxCount :1} , 
+  {name: 'secondimg' , maxCount :1} , 
+  {name:'thirdimg' ,maxCount:1}  
+]),
+  async(req,res) => {
+  const {category , id} = req.params ; 
+  const {title , price , specific  ,location ,description } = req.body  ;
+         const h=await Houses.findById(id)
+       const v=await Vehicle.findById(id)
+      const d=await Devices.findById(id)
+      const f=await Furnitures.findById(id)
+      const a=await Appliances.findById(id) ; 
+      const fa=await Fashion.findById(id) ; 
+
+  let data;
+     if(category == 'Houses'){
+       await Houses.findById(id)
+  }
+     if(category == 'Vehicle'){
+       await Vehicle.findById(id)
+  }
+   if(category == 'Devices'){
+      await Devices.findById(id)
+  }
+  if(category == 'Furnitures'){
+      await Furnitures.findById(id)
+  }
+  if(category == 'Appliances'){
+      await Appliances.findById(id) ; 
+  }
+  if(category == 'Fashion'){
+      await Fashion.findById(id) ; 
+  }
+
+  if(category == 'Houses'){
+     await Houses.findByIdAndUpdate(id , {$set : {
+      title:title || h.title, 
+      price:price || h.price, 
+      description:description || h.description , 
+      location: location  || h.location, 
+      specific:specific || h.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || h.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || h.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || h.extraimg
+
+ 
+
+     }}) ; 
+  }
+   if(category == 'Vehicle'){
+      await Vehicle.findByIdAndUpdate(id , {$set : {
+      title:title || v.title, 
+      price:price || v.price, 
+      description:description || v.description , 
+      location: location  || v.location, 
+      specific:specific || v.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || v.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || v.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || v.extraimg
+
+ 
+
+     }})
+  }
+   if(category == 'Devices'){
+     await Devices.findByIdAndUpdate(id , {$set : {
+      title:title || d.title, 
+      price:price || d.price, 
+      description:description || d.description , 
+      location: location  || d.location, 
+      specific:specific || d.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || d.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || d.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || d.extraimg
+
+ 
+
+     }})
+  }
+  if(category == 'Furnitures'){
+await Furnitures.findByIdAndUpdate(id , {$set : {
+      title:title || f.title, 
+      price:price || f.price, 
+      description:description || f.description , 
+      location: location  || f.location, 
+      specific:specific || f.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || f.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || f.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || f.extraimg
+
+ 
+
+     }})
+  }
+  if(category == 'Appliances'){
+     await Appliances.findByIdAndUpdate(id , {$set : {
+      title:title || a.title, 
+      price:price || a.price, 
+      description:description || a.description , 
+      location: location  || a.location, 
+      specific:specific || a.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || a.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || a.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || a.extraimg
+
+ 
+
+     }}) ; 
+  }
+  if(category == 'Fashion'){
+     await Fashion.findByIdAndUpdate(id , {$set : {
+      title:title || fa.title, 
+      price:price || fa.price, 
+      description:description || fa.description , 
+      location: location  || fa.location, 
+      specific:specific || fa.specific , 
+   bgimg: req.files['bgimg'] ? req.files['bgimg'][0].path : null || fa.bgimg,
+      secondimg: req.files['secondimg'] ? req.files['secondimg'][0].path : null || fa.secondimg,
+   extraimg: req.files['extraimg'] ? req.files['extraimg'][0].path : null || fa.extraimg
+
+ 
+
+     }}) ; 
+  }
+  res.redirect(`/edit/${category}/${id}`)
+});
+app.get('/opt' , async(req,res) => {
+  res.render('demo')
 })

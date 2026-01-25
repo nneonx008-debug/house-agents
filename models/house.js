@@ -19,7 +19,9 @@ const  housesSchema =  new Schema({
         default:Date.now
     } , 
     beds : Number  ,
-    baths :Number , 
+    baths :Number ,
+        typo : String ,
+
   comments: [{ 
     text: String, 
     date: { type: Date, default: Date.now } 
