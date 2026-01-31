@@ -19,6 +19,7 @@ const allListingSchema = new mongoose.Schema({
   price:String , 
   createdAt: { type: Date, default: Date.now },
         VIP: { type: Boolean, default: false }, // 👈 new field
+        expired:{ type: Boolean, default: false }
 
 });
 
