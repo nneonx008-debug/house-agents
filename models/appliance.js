@@ -21,7 +21,17 @@ const appliance = new Schema ({
   } ,
     thirdimg:String , 
     location:String ,
-      VIP: { type: Boolean, default: false }, // 👈 new field
-
+    expired:{type: Boolean , default:false} , 
+    deadline : {type : Date , default : null} , 
+    deleteconfirm: {type:Boolean , default:false} , 
+          VIP: { type: Boolean, default: false }, // 👈 new f
+   createdAt: { type: Date, default: Date.now },
+  adExpiresAt: { type: Date },        // When ad stops being visible
+  vipExpiresAt: { type: Date , default:null },
+    boostCount : {type: Number ,  default: 0},
+    views : {type : Number , default : 0} ,
+    names: {type:String} , 
+    isFirst :{type : Boolean ,default : false },
+  boost: { type: Date , default:null } // When VIP boost ends
 })
 module.exports = mongoose.model('Appliances' , appliance);
