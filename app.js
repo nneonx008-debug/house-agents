@@ -815,8 +815,50 @@ app.get('/property/:category/:id', isAuthenticated , async (req, res) => {
     }).sort({ createdAt: -1 });
 
     // Get logged-in user
+    let views = null;
     const user = await User.findById(req.session.userId);
-
+    if(category == 'Houses'){
+      views =  await Houses.findById(id)
+      if(views.userId != req.session.userId){
+        views.views += 1;
+        await views.save();
+      }
+    }
+      if(category == 'Vehicle'){
+      views =  await Vehicle.findById(id)
+      if(views.userId != req.session.userId){
+        views.views += 1;
+        await views.save();
+      }
+    }
+      if(category == 'Devices'){
+      views =  await Devices.findById(id)
+      if(views.userId != req.session.userId){
+        views.views += 1;
+        await views.save();
+      }
+    }
+      if(category == 'Furnitures'){
+      views =  await Furnitures.findById(id)
+      if(views.userId != req.session.userId){
+        views.views += 1;
+        await views.save();
+      }
+    }
+        if(category == 'Appliances'){
+      views =  await Appliances.findById(id)
+      if(views.userId != req.session.userId){
+        views.views += 1;
+        await views.save();
+      }
+    }
+        if(category == 'Fashion'){
+      views =  await Fashion.findById(id)
+      if(views.userId != req.session.userId){
+        views.views += 1;
+        await views.save();
+      }
+    }
     // Load listing based on category
     switch (category) {
       case "Houses":
@@ -850,7 +892,86 @@ app.get('/property/:category/:id', isAuthenticated , async (req, res) => {
     if (!data) {
       return res.status(404).send("Listing not found");
     }
+    const u = await User.findByIdAndUpdate(req.session.userId ,{
+          $set : {browser : `/property/${category}/${id}`}
+        } );
+        
+      await u.save();
+      const mail =  await User.findById(views.userId)
+          if(views.isFirst == false && views.userId != req.session.userId){
+        const msg = new Message({
+          sender : req.session.userId ,
+        receiver : views.userId 
+        ,content : `${user.username} veiwed your AD "${views.title}"`,
+        lik : `/property/${category}/${id}`,
+        isfeedback : true 
+        })
+        await msg.save();
 
+        if(category == "Houses"){
+               await Houses.findByIdAndUpdate(id , {
+          $set : {isFirst : true}
+        })
+        }
+      if(category == "Vehicle"){
+               await Vehicle.findByIdAndUpdate(id , {
+          $set : {isFirst : true}
+        })
+        }
+
+      if(category == "Fashion"){
+               await Fashion.findByIdAndUpdate(id , {
+          $set : {isFirst : true}
+        })
+        }
+      if(category == "Furnitures"){
+               await Furnitures.findByIdAndUpdate(id , {
+          $set : {isFirst : true}
+        })
+        }
+      if(category == "Devices"){
+               await Devices.findByIdAndUpdate(id , {
+          $set : {isFirst : true}
+        })
+        }
+
+        await msg.save();
+              
+      // Create transporter with TLS fix
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,       // your Gmail sender
+          pass: process.env.EMAIL_PASS   // your 16-character app password
+        },
+        tls: {
+          rejectUnauthorized: false      // <-- fix self-signed certificate error
+        }
+      });
+
+      // Email content
+      const mailOptions = {
+        from: `"Edsam Agents" <${process.env.EMAIL}>`,
+        to: mail.email,
+        subject: "Neonx market",
+        html: `
+          <p>Hello ${mail.username},</p>
+          <p>${user.username} viewed your AD "${views.title}"</p> 
+          <p>
+            <a href="${process.env.APP_URL}/profile">
+              SEE MORE!
+            </a>
+          </p>
+        `
+      };
+
+      // Send the email
+      await transporter.sendMail(mailOptions);
+    
+  
+    
+      
+      }
     // ✅ Now that we have data, we can fetch feedback
     const feedbacks = await Feedback.find({ sellerId: data.userId._id })
       .populate("buyerId", "username email")
